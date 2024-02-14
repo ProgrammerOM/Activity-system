@@ -1,44 +1,47 @@
-
-function submitComment() {
-    var username = document.getElementById("username").value;
-    var comment = document.getElementById("comment").value;
-  
-    console.log("Username:", username);
-    console.log("Comment:", comment);
-  
-    // Note: Adjust the API endpoint and method based on your server-side implementation
-    fetch("https://goatbet69.com/wp-json/site-reviews/v1/reviews/", {
-      method: "GET", // Change to POST if you're submitting data
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization should be handled on the server side for security reasons
-        "Authorization": "Basic YWRtaW5nb2F0YmV0Njk6ZGlTUCB3VjA1IElrUnQgd2o3RCBpcWx4IE13REI=",
-      },
-      // Add a 'body' property if you are sending data in the request
-      body: JSON.stringify({ username, comment }),
-    })
-      .then((response) => response.json())
+const axios = require("axios");
+module.exports.CheckUser = async (req, res) => {
+  try {
+    username = { account, comment } = req.body;
+    console.log("account :",account)
+    console.log("comment :",comment)
+    await axios
+      .get("https://goatbet69.net/wp-json/site-reviews/v1/reviews/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
+        },
+      })
+      .then((response) => response.data)
       .then((result) => {
         let isUserFound = false;
-  
         for (let i = 0; i < result.length; i++) {
-          if (username === result[i].title) {
+          
+          if (account === result[i].title && comment === result[i].content) {
             isUserFound = true;
             console.log(
-              `id: ${result[i].id} ข้อมูล: ${result[i].title} เจอตามเงื่อนไข`
+              `id: ${result[i].id} ข้อมูล: ${result[i].title} มีในระบบ`
             );
             break;
           }
         }
-  
+
         if (isUserFound) {
-          setTimeout(function () {
-            window.location.replace("http://www.example.com"); // Change the URL
-          }, 2000);
+          res.json({
+            succeed: account,
+            isUserFound,
+          });
+          console.log(`มีข้อมูลในระบบ ${account}`);
         } else {
-          console.log(`ไม่พบข้อมูลที่ตรงกับ ${username}`);
+          res.json({
+            unsuccessful: account,
+            isUserFound,
+          });
+          console.log(`ไม่มีข้อมูลในระบบ ${account}`);
         }
       })
       .catch((error) => console.log("error", error));
+  } catch (error) {
+    console.log(error);
   }
-  
+};

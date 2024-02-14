@@ -45,12 +45,18 @@
   <body>
     <form id="commentForm">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
+      <input type="text" id="username" name="site-reviews[username]" required />
 
       <label for="comment">Comment:</label>
-      <textarea id="comment" name="comment" rows="4" required></textarea>
+      <textarea
+        id="comment"
+        name="site-reviews[comment]"
+        rows="4"
+        required
+      ></textarea>
 
       <button type="button" onclick="submitComment()">Submit</button>
     </form>
+    <script src="/controllers/test.js"></script>
   </body>
 </html>
