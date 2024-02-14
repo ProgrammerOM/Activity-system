@@ -39,7 +39,7 @@ module.exports.CheckUser = async (req, res) => {
             });
             console.log(`ไม่มีข้อมูลในระบบ ${account}`);
           }
-        }, 5000);
+        }, 8000);
       })
       .catch((error) => console.log("error", error));
   } catch (error) {
