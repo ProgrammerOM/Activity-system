@@ -14,8 +14,8 @@ module.exports.CheckUser = async (req, res) => {
       })
       .then((response) => response.data)
       .then((result) => {
-        let isUserFound = false;
         setTimeout(function () {
+          let isUserFound = false;
           for (let i = 0; i < result.length; i++) {
             if (account === result[i].title && comment === result[i].content) {
               isUserFound = true;
@@ -39,7 +39,7 @@ module.exports.CheckUser = async (req, res) => {
             });
             console.log(`ไม่มีข้อมูลในระบบ ${account}`);
           }
-        }, 8000);
+        }, 10000);
       })
       .catch((error) => console.log("error", error));
   } catch (error) {
