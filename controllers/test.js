@@ -1,9 +1,11 @@
 function submitComment() {
   // let username = document.getElementById("username").value;
-  var username = document.querySelector('input[name=site-reviews[username]]').value;
+  var username = document.querySelector(
+    'input[name="site-reviews[title]"]'
+  ).value;
 
   // let comment = document.getElementById("comment").value;
-  var comment = document.querySelector('input[name=site-reviews[comment]]').value;
+  var comment = document.querySelector('[name="site-reviews[content]"]').value;
 
   console.log("Username:", username);
   console.log("Comment:", comment);
