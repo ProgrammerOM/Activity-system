@@ -1,51 +1,3 @@
-// const axios = require("axios");
-// module.exports.CheckUser = async (req, res) => {
-//   try {
-//     username = { account, comment } = req.body;
-//     console.log("account :", account);
-//     console.log("comment :", comment);
-//     await axios
-//       .get("https://goatbet69.net/wp-json/site-reviews/v1/reviews/", {
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization:
-//             "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
-//         },
-//       })
-//       .then((response) => response.data)
-//       .then((result) => {
-//         console.log();
-//         let isUserFound = false;
-//         for (let i = 0; i < result.length; i++) {
-//           if (account === result[i].title && comment === result[i].content) {
-//             isUserFound = true;
-//             console.log(
-//               `id: ${result[i].id} ข้อมูล: ${result[i].title} มีในระบบ`
-//             );
-//             break;
-//           }
-//         }
-
-//         if (isUserFound) {
-//           res.json({
-//             succeed: account,
-//             isUserFound,
-//           });
-//           console.log(`มีข้อมูลในระบบ ${account}`);
-//         } else {
-//           res.json({
-//             unsuccessful: account,
-//             isUserFound,
-//           });
-//           console.log(`ไม่มีข้อมูลในระบบ ${account}`);
-//         }
-//       })
-//       .catch((error) => console.log("error", error));
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 const axios = require("axios");
 
 module.exports.CheckUser = async (req, res) => {
@@ -59,7 +11,11 @@ module.exports.CheckUser = async (req, res) => {
       return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 8000));
+    // นับเวลาถอยหลัง 8 วินาที
+    for (let i = 8; i > 0; i--) {
+      console.log(`นับเวลา: ${i}`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
 
     const response = await axios.get(
       "https://goatbet69.net/wp-json/site-reviews/v1/reviews/",
