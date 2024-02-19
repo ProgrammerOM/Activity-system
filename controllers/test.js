@@ -28,3 +28,32 @@ function submitComment() {
     })
     .catch((error) => console.log("error", error));
 }
+
+
+
+document.getElementById("submitBtn").addEventListener("click", function () {
+  let inputData = document.getElementById("inputData").value;
+  
+
+  fetch("http://localhost:8000/codes", {
+    method: "GET"
+  })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result.randomCode)
+      if (result.randomCode) {
+        document.getElementById("popupData").innerHTML = "You entered: " + result.randomCode;
+      }
+
+
+    })
+    .catch(error => console.log('error', error));
+
+
+  document.getElementById("popup").style.display = "block";
+});
+
+document.getElementById("closeBtn").addEventListener("click", function () {
+  document.getElementById("popup").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+});
