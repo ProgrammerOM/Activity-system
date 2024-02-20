@@ -1,5 +1,6 @@
 const axios = require("axios");
 const fs = require('fs');
+const Users = require('../models/Users')
 
 module.exports.CheckUser = async (req, res) => {
   try {
@@ -12,6 +13,7 @@ module.exports.CheckUser = async (req, res) => {
       return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
     }
 
+    Users.findOne()
     // นับเวลาถอยหลัง 8 วินาที
     for (let i = 8; i > 0; i--) {
       console.log(`นับเวลา: ${i}`);
@@ -59,33 +61,61 @@ module.exports.CheckUser = async (req, res) => {
   }
 };
 
-
 let usedCodes = [];
+
+// Function to read and filter codes from the file
+const getRemainingCodes = () => {
+  const codes = fs.readFileSync('./code.text', 'utf8').replace(/\r/g, '').split('\n').filter(Boolean);
+  return codes.filter(code => !usedCodes.includes(code));
+};
 
 module.exports.RandomCode = async (req, res) => {
   try {
-    // อ่านข้อมูลจากไฟล์ code.text
-    const codes = fs.readFileSync('./code.text', 'utf8').replace(/\r/g, '').split('\n').filter(Boolean);
-
-    // กรอง code ที่ยังไม่ถูก random ไป
-    const remainingCodes = codes.filter(code => !usedCodes.includes(code));
-
-    // ตรวจสอบว่ายังมี code ที่ไม่ถูก random ไปหรือไม่
-    if (remainingCodes.length === 0) {
-      res.status(404).json({ error: 'No available codes' });
-      return;
+    const { account } = req.body;
+    if (!account) {
+      return res.status(400).json({ error: "Invalid data" });
     }
 
-    // Random เลือก code หนึ่ง
-    const randomCode = remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+    const response = await axios.get('https://goatbet69.net/wp-json/site-reviews/v1/reviews/', {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
+      },
+    });
 
-    // เก็บ code ที่ถูก random เพื่อให้ไม่ซ้ำกันในครั้งถัดไป
-    usedCodes.push(randomCode);
-    console.log(usedCodes)
+    const result = response.data;
+    let isUserFound = false;
 
-    res.json({randomCode});
-  } catch (e) {
-    console.log('Error:', e.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
+    for (let i = 0; i < result.length; i++) {
+      if (account === result[i].title) {
+        isUserFound = true;
+
+        const remainingCodes = getRemainingCodes();
+
+        if (remainingCodes.length === 0) {
+          return res.status(404).json({ error: 'No available codes' });
+        }
+
+        const randomCode = remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+
+        usedCodes.push(randomCode);
+        console.log(usedCodes);
+
+        return res.json({ isUserFound, randomCode });
+      }
+    }
+
+    // Handle the case where the user is not found
+    return res.json({ isUserFound: false, randomCode: null });
+
+  } catch (error) {
+    console.error('Error:', error.message);
+
+    // Handle specific errors
+    if (error.response && error.response.status === 404) {
+      return res.status(404).json({ error: 'Data not found' });
+    }
+
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

@@ -8,6 +8,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/user", CheckUser);
-router.get('/codes', RandomCode)
+router.post('/codes', RandomCode)
 
 module.exports = router;

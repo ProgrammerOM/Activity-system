@@ -33,19 +33,25 @@ function submitComment() {
 
 document.getElementById("submitBtn").addEventListener("click", function () {
   let inputData = document.getElementById("inputData").value;
-  
+  let popupData = document.getElementById("popupData")
+
 
   fetch("http://localhost:8000/codes", {
-    method: "GET"
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ account: inputData })
   })
     .then(response => response.json())
     .then(result => {
-      console.log(result.randomCode)
-      if (result.randomCode) {
-        document.getElementById("popupData").innerHTML = "You entered: " + result.randomCode;
+      if (result.isUserFound) {
+        console.log(result)
+        popupData.innerHTML = "You entered: " + result.randomCode;
+      }else {
+        console.log(result)
+        popupData.innerHTML = "ตรวจสอบความถูกต้อง";
       }
-
-
     })
     .catch(error => console.log('error', error));
 
