@@ -1,6 +1,6 @@
 const axios = require("axios");
-const fs = require('fs');
-const Users = require('../models/Users')
+const fs = require("fs");
+const Redeem = require("../models/Redeem");
 
 module.exports.CheckUser = async (req, res) => {
   try {
@@ -13,7 +13,15 @@ module.exports.CheckUser = async (req, res) => {
       return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
     }
 
-    Users.findOne()
+    let update = await Redeem.findOneAndUpdate(
+      { account: account },
+      { account: account, content: comment },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    console.log(update);
     // นับเวลาถอยหลัง 8 วินาที
     for (let i = 8; i > 0; i--) {
       console.log(`นับเวลา: ${i}`);
@@ -65,8 +73,12 @@ let usedCodes = [];
 
 // Function to read and filter codes from the file
 const getRemainingCodes = () => {
-  const codes = fs.readFileSync('./code.text', 'utf8').replace(/\r/g, '').split('\n').filter(Boolean);
-  return codes.filter(code => !usedCodes.includes(code));
+  const codes = fs
+    .readFileSync("./code.text", "utf8")
+    .replace(/\r/g, "")
+    .split("\n")
+    .filter(Boolean);
+  return codes.filter((code) => !usedCodes.includes(code));
 };
 
 module.exports.RandomCode = async (req, res) => {
@@ -76,12 +88,16 @@ module.exports.RandomCode = async (req, res) => {
       return res.status(400).json({ error: "Invalid data" });
     }
 
-    const response = await axios.get('https://goatbet69.net/wp-json/site-reviews/v1/reviews/', {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
-      },
-    });
+    const response = await axios.get(
+      "https://goatbet69.net/wp-json/site-reviews/v1/reviews/",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
+        },
+      }
+    );
 
     const result = response.data;
     let isUserFound = false;
@@ -93,10 +109,11 @@ module.exports.RandomCode = async (req, res) => {
         const remainingCodes = getRemainingCodes();
 
         if (remainingCodes.length === 0) {
-          return res.status(404).json({ error: 'No available codes' });
+          return res.status(404).json({ error: "No available codes" });
         }
 
-        const randomCode = remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+        const randomCode =
+          remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
 
         usedCodes.push(randomCode);
         console.log(usedCodes);
@@ -107,15 +124,14 @@ module.exports.RandomCode = async (req, res) => {
 
     // Handle the case where the user is not found
     return res.json({ isUserFound: false, randomCode: null });
-
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error("Error:", error.message);
 
     // Handle specific errors
     if (error.response && error.response.status === 404) {
-      return res.status(404).json({ error: 'Data not found' });
+      return res.status(404).json({ error: "Data not found" });
     }
 
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
