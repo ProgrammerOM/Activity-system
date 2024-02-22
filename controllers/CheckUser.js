@@ -13,15 +13,6 @@ module.exports.CheckUser = async (req, res) => {
       return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
     }
 
-    let update = await Redeem.findOneAndUpdate(
-      { account: account },
-      { account: account, content: comment },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-    console.log(update);
     // นับเวลาถอยหลัง 8 วินาที
     for (let i = 8; i > 0; i--) {
       console.log(`นับเวลา: ${i}`);
@@ -81,13 +72,31 @@ const getRemainingCodes = () => {
   return codes.filter((code) => !usedCodes.includes(code));
 };
 
+const CheckTime = (account) => {
+  setInterval(async () => {
+    let time = new Date().toLocaleTimeString("it-IT", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    console.log(time)
+    if (time === '17:05:00') {
+      const Update = await Redeem.updateOne({ account: account }, { isreceived: false })
+      console.log(Update)
+    }
+
+
+  }, 1000)
+}
+
+
 module.exports.RandomCode = async (req, res) => {
   try {
     const { account } = req.body;
     if (!account) {
       return res.status(400).json({ error: "Invalid data" });
     }
-
     const response = await axios.get(
       "https://goatbet69.net/wp-json/site-reviews/v1/reviews/",
       {
@@ -98,27 +107,45 @@ module.exports.RandomCode = async (req, res) => {
         },
       }
     );
-
     const result = response.data;
+
     let isUserFound = false;
 
     for (let i = 0; i < result.length; i++) {
       if (account === result[i].title) {
         isUserFound = true;
-
         const remainingCodes = getRemainingCodes();
 
         if (remainingCodes.length === 0) {
           return res.status(404).json({ error: "No available codes" });
         }
 
-        const randomCode =
-          remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+        const randomCode = remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
 
         usedCodes.push(randomCode);
-        console.log(usedCodes);
 
-        return res.json({ isUserFound, randomCode });
+        CheckTime(account)
+
+        const NewUpdate = await Redeem.findOneAndUpdate({ account: account }, { account: account, $addToSet: { codes: randomCode } }
+          , {
+            new: true,
+            upsert: true
+          })
+
+        console.log(NewUpdate)
+
+        const checkUser = await Redeem.findOne({ account: account })
+        if (checkUser.isreceived === true) {
+          return res.status(403).json(({
+            error: "ให้รอจนกว่า 00:00 ถึงจะรับรีอีกรอบได้"
+          }))
+        }
+
+        await Redeem.findOneAndUpdate({ account: account }, { isreceived: true })
+
+
+        return res.status(200).json({ account, isUserFound, randomCode });
+
       }
     }
 

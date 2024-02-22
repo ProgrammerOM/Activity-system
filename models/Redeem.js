@@ -3,12 +3,11 @@ const Schema = mongoose.Schema;
 const RedeemCode = new Schema(
   {
     account: String,
-    content: String,
-    codes: String,
-    apply: {
+    codes: [String],
+    isreceived: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   {
     timestamps: true,
