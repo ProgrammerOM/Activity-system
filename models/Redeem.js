@@ -4,10 +4,14 @@ const RedeemCode = new Schema(
   {
     account: String,
     codes: [String],
+    isUserFound: {
+      type: Boolean,
+      default: false,
+    },
     isreceived: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   {
     timestamps: true,

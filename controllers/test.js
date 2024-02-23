@@ -29,32 +29,26 @@ function submitComment() {
     .catch((error) => console.log("error", error));
 }
 
-
-
 document.getElementById("submitBtn").addEventListener("click", function () {
   let inputData = document.getElementById("inputData").value;
-  let popupData = document.getElementById("popupData")
-
+  let popupData = document.getElementById("popupData");
 
   fetch("http://localhost:8000/codes", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ account: inputData })
+    body: JSON.stringify({ account: inputData }),
   })
-    .then(response => response.json())
-    .then(result => {
+    .then((response) => response.json())
+    .then((result) => {
       if (result.isUserFound) {
-        console.log(result)
-        popupData.innerHTML = "You entered: " + result.randomCode;
-      }else {
-        console.log(result)
-        popupData.innerHTML = "ตรวจสอบความถูกต้อง";
+        popupData.innerHTML = "Code: " + result.randomCode;
+      } else {
+        popupData.innerHTML = result.error;
       }
     })
-    .catch(error => console.log('error', error));
-
+    .catch((error) => console.log("error", error));
 
   document.getElementById("popup").style.display = "block";
 });

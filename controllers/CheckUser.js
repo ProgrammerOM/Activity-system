@@ -80,16 +80,16 @@ const CheckTime = (account) => {
       second: "2-digit",
       hour12: false,
     });
-    console.log(time)
-    if (time === '17:05:00') {
-      const Update = await Redeem.updateOne({ account: account }, { isreceived: false })
-      console.log(Update)
+    console.log(time);
+    if (time === "14:24:00" || time === "14:25:00") {
+      const Update = await Redeem.findOneAndUpdate(
+        { account: account },
+        { isreceived: false }
+      );
+      console.log(Update);
     }
-
-
-  }, 1000)
-}
-
+  }, 1000);
+};
 
 module.exports.RandomCode = async (req, res) => {
   try {
@@ -120,32 +120,35 @@ module.exports.RandomCode = async (req, res) => {
           return res.status(404).json({ error: "No available codes" });
         }
 
-        const randomCode = remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+        const NewUpdate = await Redeem.findOne({ account: account });
 
-        usedCodes.push(randomCode);
-
-        CheckTime(account)
-
-        const NewUpdate = await Redeem.findOneAndUpdate({ account: account }, { account: account, $addToSet: { codes: randomCode } }
-          , {
-            new: true,
-            upsert: true
-          })
-
-        console.log(NewUpdate)
-
-        const checkUser = await Redeem.findOne({ account: account })
-        if (checkUser.isreceived === true) {
-          return res.status(403).json(({
-            error: "ให้รอจนกว่า 00:00 ถึงจะรับรีอีกรอบได้"
-          }))
+        if (!NewUpdate) {
+          await Redeem.create({
+            account: account,
+            isUserFound: isUserFound,
+          });
         }
 
-        await Redeem.findOneAndUpdate({ account: account }, { isreceived: true })
+        const checkUser = await Redeem.findOne({ account: account });
 
+        if (checkUser.isreceived === true) {
+          return res.status(403).json({
+            error: "ให้รอจนกว่า 00:00 ถึงจะรับรอีกรอบได้",
+          });
+        }
 
-        return res.status(200).json({ account, isUserFound, randomCode });
+        const randomCode =
+          remainingCodes[Math.floor(Math.random() * remainingCodes.length)];
+        console.log(randomCode);
+        usedCodes.push(randomCode);
 
+        await Redeem.findOneAndUpdate(
+          { account: account },
+          { $addToSet: { codes: randomCode }, isreceived: true }
+        );
+        CheckTime(account);
+
+        return res.status(200).json({ account, randomCode, isUserFound });
       }
     }
 
