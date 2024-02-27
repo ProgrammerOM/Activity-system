@@ -8,6 +8,9 @@ module.exports.CheckUser = async (req, res) => {
     console.log("account :", account);
     console.log("comment :", comment);
 
+    let CreateAcc = await Redeem.create({ account: account, comment: comment });
+    console.log(CreateAcc);
+
     // ตรวจสอบว่า account และ comment ถูกส่งมาในรูปแบบที่ถูกต้องหรือไม่
     if (!account || !comment) {
       return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
@@ -81,7 +84,7 @@ const CheckTime = (account) => {
       hour12: false,
     });
     console.log(time);
-    if (time === "14:24:00" || time === "14:25:00") {
+    if (time === "15:57:00" || time === "15:58:00") {
       const Update = await Redeem.findOneAndUpdate(
         { account: account },
         { isreceived: false }
@@ -95,7 +98,7 @@ module.exports.RandomCode = async (req, res) => {
   try {
     const { account } = req.body;
     if (!account) {
-      return res.status(400).json({ error: "Invalid data" });
+      return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
     }
     const response = await axios.get(
       "https://goatbet69.net/wp-json/site-reviews/v1/reviews/",
@@ -117,7 +120,7 @@ module.exports.RandomCode = async (req, res) => {
         const remainingCodes = getRemainingCodes();
 
         if (remainingCodes.length === 0) {
-          return res.status(404).json({ error: "No available codes" });
+          return res.status(404).json({ error: "ไม่มี Code ที่ใช้ได้" });
         }
 
         const NewUpdate = await Redeem.findOne({ account: account });
@@ -133,7 +136,8 @@ module.exports.RandomCode = async (req, res) => {
 
         if (checkUser.isreceived === true) {
           return res.status(403).json({
-            error: "ให้รอจนกว่า 00:00 ถึงจะรับรอีกรอบได้",
+            error:
+              "เสียใจด้วย คุณได้รับ Code ไปแล้วค่ะ สามารถรับได้อีกครั้งในวันถัดไป ขอบคุณค่ะ",
           });
         }
 

@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const RedeemCode = new Schema(
   {
     account: String,
+    comment: String,
     codes: [String],
     isUserFound: {
       type: Boolean,
