@@ -20,7 +20,7 @@ function submitComment() {
     .then((response) => response.json())
     .then((result) => {
       console.log(result);
-      if (result.isUserFound) {
+      if (result.isUserFound === false && result.isComment === false) {
         setTimeout(function () {
           window.location.replace("http://www.google.com");
         }, 2000);

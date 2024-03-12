@@ -9,7 +9,11 @@ const RedeemCode = new Schema(
       type: Boolean,
       default: false,
     },
-    isreceived: {
+    isComment: {
+      type: Boolean,
+      default: false, 
+    },
+    isReceived: {
       type: Boolean,
       default: false,
     },

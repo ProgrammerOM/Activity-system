@@ -8,7 +8,7 @@ module.exports.CheckUser = async (req, res) => {
     console.log("account :", account);
     console.log("comment :", comment);
 
-    let CreateAcc = await Redeem.create({ account: account, comment: comment });
+    let CreateAcc = await Redeem.findOneAndUpdate({ account: account }, { account: account, comment: comment }, { upsert: true });
     console.log(CreateAcc);
 
     // ตรวจสอบว่า account และ comment ถูกส่งมาในรูปแบบที่ถูกต้องหรือไม่
@@ -23,7 +23,7 @@ module.exports.CheckUser = async (req, res) => {
     }
 
     const response = await axios.get(
-      "https://goatbet69.net/wp-json/site-reviews/v1/reviews/",
+      "https://goatbet69.net/wp-json/site-reviews/v1/reviews/?_fields=id,title,content,ip_address",
       {
         headers: {
           "Content-Type": "application/json",
@@ -37,19 +37,27 @@ module.exports.CheckUser = async (req, res) => {
 
     let isUserFound = false;
     for (let i = 0; i < result.length; i++) {
-      if (account === result[i].title && comment === result[i].content) {
-        isUserFound = true;
-        console.log(`id: ${result[i].id} ข้อมูล: ${result[i].title} มีในระบบ`);
-        break;
+      if (account === result[i].title) {
+        let check = await Redeem.findOne({ account: account })
+        if (account === check.account ) {
+          isUserFound = true;
+          console.log(`id: ${result[i].id} ข้อมูล: ${result[i].title} มีในระบบ`);
+          break;
+        }
       }
     }
 
-    if (isUserFound) {
+   let ChackUserFound = await Redeem.findOne({ account: account })
+
+    if (ChackUserFound) {
       res.json({
         succeed: account,
-        isUserFound,
+        isUserFound: ChackUserFound.isUserFound,
+        isComment: ChackUserFound.isComment
       });
       console.log(`มีข้อมูลในระบบ ${account}`);
+      let UpisUserFound = await Redeem.findOneAndUpdate({ account: account }, { isUserFound: true, isComment: true })
+      console.log(UpisUserFound)
     } else {
       res.json({
         unsuccessful: account,
@@ -84,10 +92,10 @@ const CheckTime = (account) => {
       hour12: false,
     });
     console.log(time);
-    if (time === "15:57:00" || time === "15:58:00") {
+    if (time === "17:19:00" || time === "17:20:00") {
       const Update = await Redeem.findOneAndUpdate(
         { account: account },
-        { isreceived: false }
+        { isReceived: false, isComment: false }
       );
       console.log(Update);
     }
@@ -134,7 +142,7 @@ module.exports.RandomCode = async (req, res) => {
 
         const checkUser = await Redeem.findOne({ account: account });
 
-        if (checkUser.isreceived === true) {
+        if (checkUser.isReceived === true && checkUser.isComment === true) {
           return res.status(403).json({
             error:
               "เสียใจด้วย คุณได้รับ Code ไปแล้วค่ะ สามารถรับได้อีกครั้งในวันถัดไป ขอบคุณค่ะ",
@@ -148,7 +156,7 @@ module.exports.RandomCode = async (req, res) => {
 
         await Redeem.findOneAndUpdate(
           { account: account },
-          { $addToSet: { codes: randomCode }, isreceived: true }
+          { $addToSet: { codes: randomCode }, isReceived: true }
         );
         CheckTime(account);
 
