@@ -1,3 +1,42 @@
+const referrer = document.referrer;
+document.getElementById("referrer").innerText = referrer
+  ? "User came from: " + referrer
+  : "No referrer";
+
+const searchEngines = [
+  "google.com",
+  "bing.com",
+  "yahoo.com",
+  "baidu.com",
+  "yandex.com",
+  "duckduckgo.com",
+];
+
+let isFromSearchEngine = false;
+if (referrer) {
+  for (let i = 0; i < searchEngines.length; i++) {
+    if (referrer.includes(searchEngines[i])) {
+      isFromSearchEngine = true;
+      break;
+    }
+  }
+}
+
+document.getElementById("source").innerText = isFromSearchEngine
+  ? "User came from a search engine"
+  : "User did not come from a search engine";
+
+// ส่งข้อมูลไปยัง server
+fetch("http://yourserver.com/log-referrer", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    referrer: referrer,
+    isFromSearchEngine: isFromSearchEngine,
+  }),
+});
 document.getElementById("get-mac-btn").addEventListener("click", () => {
   fetch("https://activity-system-fete.onrender.com/get-mac")
     .then((response) => response.json())
