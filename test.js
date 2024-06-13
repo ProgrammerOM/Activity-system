@@ -7,6 +7,7 @@ document.getElementById("get-mac-btn").addEventListener("click", () => {
       //   "MAC Address: " + data.mac_address;
     })
     .catch((error) => {
+      console.log(error);
       console.error("Error fetching MAC address:", error);
     });
 });
