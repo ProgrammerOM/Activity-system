@@ -19,5 +19,5 @@ connectDB();
 readdirSync("./routers").map((r) => app.use(require("./routers/" + r)));
 
 app.listen(port, () => {
-  console.log(`app listening on port ${port}`);
+  console.log(`Server running at http://localhost:${port}/`);
 });

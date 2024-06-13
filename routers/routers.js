@@ -11,6 +11,7 @@ router.get("/", (req, res) => {
 router.get("/get-mac", (req, res) => {
   network.get_active_interface((err, obj) => {
     if (err) {
+      console.log(err);
       res.status(500).json(err);
     } else {
       res.json({ mac_address: obj.mac_address });

@@ -1,5 +1,5 @@
 document.getElementById("get-mac-btn").addEventListener("click", () => {
-  fetch("http://localhost:8000/get-mac")
+  fetch("https://activity-system-fete.onrender.com/get-mac")
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
