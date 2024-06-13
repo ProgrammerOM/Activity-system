@@ -1,149 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Comment Form</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      .container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: 30%;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 50px auto;
-        box-shadow: rgb(0 255 30 / 80%) 0px 6px 24px 0px,
-          rgb(21 255 0 / 50%) 0px 0px 0px 1px;
-      }
 
-      form {
-        width: 100%;
-        margin: 0 auto;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Comment Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="/style.css">
+</head>
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-      }
+<body>
+  <div class="container">
+    <h1>Get MAC Address</h1>
+    <button id="get-mac-btn">Get MAC Address</button>
+    <p id="mac-address"></p>
+    <form id="commentForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="site-reviews[username]" required />
 
-      input,
-      textarea {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 16px;
-        box-sizing: border-box;
-        border: none;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-        border-radius: 5px;
-        line-height: 150%;
-        resize: vertical;
-      }
+      <label for="comment">Comment:</label>
+      <textarea id="comment" name="site-reviews[comment]" rows="4" required></textarea>
 
-      button {
-        width: 100%;
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
+      <button type="button" onclick="submitComment()">Submit</button>
+    </form>
 
-      button:hover {
-        background-color: #45a049;
-      }
+    <form id="myForm">
+      <label for="inputData">Enter Data:</label>
+      <input type="text" id="inputData" name="inputData" />
+      <button type="button" id="submitBtn">Submit</button>
+    </form>
 
-      #inputData {
-        padding: 8px;
-        margin-right: 8px;
-      }
-
-      #submitBtn {
-        cursor: pointer;
-      }
-
-      #popup {
-        display: none;
-        position: fixed;
-        width: 400px;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        z-index: 1;
-      }
-
-      #overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-        z-index: 1;
-      }
-      @media screen and (max-width: 800px) {
-        .container {
-          width: 85%;
-        }
-        #popup {
-          width: 80%;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-      <form id="commentForm">
-        <label for="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          name="site-reviews[username]"
-          required
-        />
-
-        <label for="comment">Comment:</label>
-        <textarea
-          id="comment"
-          name="site-reviews[comment]"
-          rows="4"
-          required
-        ></textarea>
-
-        <button type="button" onclick="submitComment()">Submit</button>
-      </form>
-
-      <form id="myForm">
-        <label for="inputData">Enter Data:</label>
-        <input type="text" id="inputData" name="inputData" />
-        <button type="button" id="submitBtn">Submit</button>
-      </form>
-
-      <div id="popup">
-        <h2>Popup Content</h2>
-        <p id="popupData"></p>
-        <button id="closeBtn">Close</button>
-      </div>
-
-      <div id="overlay"></div>
+    <div id="popup">
+      <h2>Popup Content</h2>
+      <p id="popupData"></p>
+      <button id="closeBtn">Close</button>
     </div>
 
-    <script src="/controllers/test.js"></script>
-  </body>
+    <div id="overlay"></div>
+  </div>
+
+  <script src="/controllers/test.js"></script>
+</body>
+
 </html>

@@ -4,67 +4,6 @@ const Redeem = require("../models/Redeem");
 
 module.exports.CheckUser = async (req, res) => {
   try {
-    const { account, comment } = req.body;
-    console.log("account :", account);
-    console.log("comment :", comment);
-
-    let CreateAcc = await Redeem.findOneAndUpdate({ account: account }, { account: account, comment: comment }, { upsert: true });
-    console.log(CreateAcc);
-
-    // ตรวจสอบว่า account และ comment ถูกส่งมาในรูปแบบที่ถูกต้องหรือไม่
-    if (!account || !comment) {
-      return res.status(400).json({ error: "ข้อมูลไม่ถูกต้อง" });
-    }
-
-    // นับเวลาถอยหลัง 8 วินาที
-    for (let i = 8; i > 0; i--) {
-      console.log(`นับเวลา: ${i}`);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-
-    const response = await axios.get(
-      "https://goatbet69.net/wp-json/site-reviews/v1/reviews/?_fields=id,title,content,ip_address",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "Basic YWRtaW5nb2F0YmV0Njk6a1VrSSBPZDhrIEUwTjUgYzFRSCBDVWFnIE5LdUg=",
-        },
-      }
-    );
-
-    const result = response.data;
-
-    let isUserFound = false;
-    for (let i = 0; i < result.length; i++) {
-      if (account === result[i].title) {
-        let check = await Redeem.findOne({ account: account })
-        if (account === check.account ) {
-          isUserFound = true;
-          console.log(`id: ${result[i].id} ข้อมูล: ${result[i].title} มีในระบบ`);
-          break;
-        }
-      }
-    }
-
-   let ChackUserFound = await Redeem.findOne({ account: account })
-
-    if (ChackUserFound) {
-      res.json({
-        succeed: account,
-        isUserFound: ChackUserFound.isUserFound,
-        isComment: ChackUserFound.isComment
-      });
-      console.log(`มีข้อมูลในระบบ ${account}`);
-      let UpisUserFound = await Redeem.findOneAndUpdate({ account: account }, { isUserFound: true, isComment: true })
-      console.log(UpisUserFound)
-    } else {
-      res.json({
-        unsuccessful: account,
-        isUserFound,
-      });
-      console.log(`ไม่มีข้อมูลในระบบ ${account}`);
-    }
   } catch (error) {
     console.log("error", error);
     res.status(500).json({ error: "เกิดข้อผิดพลาดบางอย่าง" });

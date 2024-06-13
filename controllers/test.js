@@ -1,3 +1,16 @@
+document.getElementById("get-mac-btn").addEventListener("click", () => {
+  fetch("http://localhost:8000/get-mac")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      // document.getElementById("mac-address").innerText =
+      //   "MAC Address: " + data.mac_address;
+    })
+    .catch((error) => {
+      console.error("Error fetching MAC address:", error);
+    });
+});
+
 function submitComment() {
   // let username = document.getElementById("username").value;
   var username = document.querySelector(
