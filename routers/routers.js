@@ -2,12 +2,7 @@ const express = require("express");
 const network = require("network");
 const router = express.Router();
 
-const { CheckUser, RandomCode } = require("../controllers/CheckUser");
 const Engines = require("../controllers/SearchEngine");
-
-router.get("/", (req, res) => {
-  res.render("index.html");
-});
 
 router.post("/log-referrer", Engines.CheckEngines);
 
