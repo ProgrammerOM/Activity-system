@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
   res.render("index.html");
 });
 
-router.get("/log-referrer", Engines.CheckEngines);
+router.post("/log-referrer", Engines.CheckEngines);
 
 router.get("/get-mac", (req, res) => {
   network.get_active_interface((err, obj) => {
@@ -22,7 +22,7 @@ router.get("/get-mac", (req, res) => {
   });
 });
 
-router.post("/user", CheckUser);
-router.post("/codes", RandomCode);
+// router.post("/user", CheckUser);
+// router.post("/codes", RandomCode);
 
 module.exports = router;

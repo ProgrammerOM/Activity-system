@@ -1,3 +1,8 @@
+async function getIPAddress() {
+  try {
+    const response = await fetch();
+  } catch (error) {}
+}
 const referrer = document.referrer;
 document.getElementById("referrer").innerText = referrer
   ? "User came from: " + referrer
@@ -27,7 +32,7 @@ document.getElementById("source").innerText = isFromSearchEngine
   : "User did not come from a search engine";
 
 // ส่งข้อมูลไปยัง server
-fetch("http://yourserver.com/log-referrer", {
+fetch("http://localhost:8000/log-referrer", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -37,19 +42,20 @@ fetch("http://yourserver.com/log-referrer", {
     isFromSearchEngine: isFromSearchEngine,
   }),
 });
-document.getElementById("get-mac-btn").addEventListener("click", () => {
-  fetch("https://activity-system-fete.onrender.com/get-mac")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      // document.getElementById("mac-address").innerText =
-      //   "MAC Address: " + data.mac_address;
-    })
-    .catch((error) => {
-      console.log(error);
-      console.error("Error fetching MAC address:", error);
-    });
-});
+
+// document.getElementById("get-mac-btn").addEventListener("click", () => {
+//   fetch("https://activity-system-fete.onrender.com/get-mac")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       // document.getElementById("mac-address").innerText =
+//       //   "MAC Address: " + data.mac_address;
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       console.error("Error fetching MAC address:", error);
+//     });
+// });
 
 function submitComment() {
   // let username = document.getElementById("username").value;
