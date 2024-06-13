@@ -1,6 +1,5 @@
 exports.CheckEngines = async (req, res) => {
-  const clientip =
-    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  let clientip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   if (clientip === "::1") {
     clientip = "127.0.0.1";
@@ -14,6 +13,7 @@ exports.CheckEngines = async (req, res) => {
     "yandex.com",
     "duckduckgo.com",
   ];
+
   const referrer = req.body.referrer || req.get("Referer");
   let isFromSearchEngine = false;
   let searchEngineName = "";
@@ -32,4 +32,11 @@ exports.CheckEngines = async (req, res) => {
   console.log("User came from:", referrer);
   console.log("Is from search engine:", isFromSearchEngine);
   console.log("Search engine name:", searchEngineName);
+
+  res.json({
+    clientip,
+    referrer,
+    isFromSearchEngine,
+    searchEngineName,
+  });
 };
