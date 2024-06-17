@@ -3,9 +3,11 @@ const network = require("network");
 const router = express.Router();
 
 const Engines = require("../controllers/SearchEngine");
+const CheckUser = require('../controllers/CheckUser')
 
 router.post("/log-referrer", Engines.CheckEngines);
 
+router.post('/redeem',CheckUser.CheckUser)
 router.get("/get-mac", (req, res) => {
   network.get_active_interface((err, obj) => {
     if (err) {
