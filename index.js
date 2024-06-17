@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
+    origin: "https://goat69.co", // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
     methods: ["GET", "POST"],
   },
 });
