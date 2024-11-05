@@ -5,22 +5,25 @@ const FreeCredit = async (data) => {
 
   if (!account || !codes) return false;
 
-  console.log(codes.redeemCode);
-  console.log(typeof codes); // should be 'string'
-  console.log(typeof codes.isActive); // should be 'boolean'
-
   let Result;
   try {
-    Result = new fc({
-      account: account,
-      code: [
-        {
-          redeemCode: codes.redeemCode,
-          isActive: codes.isActive,
+    Result = await fc.findOneAndUpdate(
+      {
+        account: account,
+      },
+      {
+        $push: {
+          code: {
+            redeemCode: codes.redeemCode,
+            isActive: codes.isActive,
+          },
         },
-      ],
-    });
-    await Result.save();
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
   } catch (error) {
     console.log(error);
     return false;

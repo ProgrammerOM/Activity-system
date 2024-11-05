@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const FreeCredit = new Schema(
+const Test = new Schema(
   {
     account: String,
     code: [
@@ -17,4 +17,4 @@ const FreeCredit = new Schema(
   }
 );
 
-module.exports = mongoose.model("FreeCredit", FreeCredit);
+module.exports = mongoose.model("TestCode", Test);

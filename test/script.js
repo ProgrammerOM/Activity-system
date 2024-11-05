@@ -8,7 +8,10 @@ async function sendApi() {
 
     const Data = {
       account: account,
-      code: code,
+      codes: {
+        redeemCode: code,
+        isActive: true,
+      },
     };
 
     const response = await fetch("http://localhost:8000/free-credit", {
