@@ -43,9 +43,19 @@ function RandomCode() {
 
 SetCodeSite();
 function SetCodeSite() {
-  setInterval(() => {
-    document.querySelector("#code1").textContent = RandomCode();
-    document.querySelector("#code2").textContent = RandomCode();
-    document.querySelector("#code3").textContent = RandomCode();
-  }, 2000);
+const codes = document.querySelectorAll('.code')
+let currentIndex = 0; // ตำแหน่งเริ่มต้นในการแสดงโค้ด
+let totalElements = codes.length;
+setInterval(() => {
+  // ลบโค้ดจากทุก element
+  codes.forEach(el => {
+    el.innerText = "";
+  });
+
+  // แสดงโค้ดใหม่ใน element ปัจจุบัน
+  codes[currentIndex].innerText = RandomCode();
+
+  // ไปยัง element ถัดไป (ถ้าถึง element สุดท้ายแล้วก็วนกลับไปที่แรก)
+  currentIndex = (currentIndex + 1) % totalElements;
+}, 10000); // ทุกๆ 5 วินาที
 }
