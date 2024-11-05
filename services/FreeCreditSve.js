@@ -3,6 +3,7 @@ const fc = require("../models/FreeCredit");
 const FreeCredit = async (data) => {
   const { account, code } = data;
   if (!account || !code) return false;
+  console.log(account);
   let Result;
   Result = await fc.findOneAndUpdate(
     { account: account },
