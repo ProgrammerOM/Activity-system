@@ -1,3 +1,17 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.querySelector("#modal__dialog");
+  const openModal = document.querySelector(".open-button__dialog");
+  const closeModal = document.querySelector(".close-button__dialog");
+
+  openModal.addEventListener("click", () => {
+    modal.showModal();
+  });
+
+  closeModal.addEventListener("click", () => {
+    modal.close();
+  });
+});
+
 async function sendApi() {
   const form = document.querySelector(".form");
   form.addEventListener("submit", async (e) => {
@@ -8,10 +22,7 @@ async function sendApi() {
 
     const Data = {
       account: account,
-      codes: {
-        redeemCode: code,
-        isActive: true,
-      },
+      codes: code,
     };
 
     const response = await fetch("http://localhost:8000/free-credit", {
@@ -23,9 +34,9 @@ async function sendApi() {
     });
     const result = await response.json();
     localStorage.setItem("account", JSON.stringify(result));
-    const resultotp = RandomCode();
+
     console.log(result);
-    console.log(resultotp);
+
   });
 }
 
@@ -41,21 +52,46 @@ function RandomCode() {
   return codes;
 }
 
-SetCodeSite();
-function SetCodeSite() {
-const codes = document.querySelectorAll('.code')
-let currentIndex = 0; // ตำแหน่งเริ่มต้นในการแสดงโค้ด
-let totalElements = codes.length;
-setInterval(() => {
-  // ลบโค้ดจากทุก element
-  codes.forEach(el => {
-    el.innerText = "";
+let Codes = [];
+let CodesIndex = 0;
+let currentIndex = 0;
+let totalCodes = 0;
+
+async function ApiGetCodes() {
+  const response = await fetch("http://localhost:8000/codes", {
+    method: "GET",
   });
-
-  // แสดงโค้ดใหม่ใน element ปัจจุบัน
-  codes[currentIndex].innerText = RandomCode();
-
-  // ไปยัง element ถัดไป (ถ้าถึง element สุดท้ายแล้วก็วนกลับไปที่แรก)
-  currentIndex = (currentIndex + 1) % totalElements;
-}, 10000); // ทุกๆ 5 วินาที
+  const Result = await response.json();
+  if (!Result) return;
+  Codes = Result;
+  totalCodes = Result.length;
 }
+
+SetCodeSite();
+async function SetCodeSite() {
+  await ApiGetCodes();
+  const codeElements = document.querySelectorAll(".code");
+  let totalElements = codeElements.length;
+
+  setInterval(async () => {
+    codeElements.forEach((el) => {
+      el.innerText = "";
+    });
+
+    while (Codes[CodesIndex].isActive && totalCodes > 0) {
+      console.log(`CodesIndex after ${CodesIndex}`);
+      CodesIndex = (CodesIndex + 1) % totalCodes;
+      console.log(`CodesIndex before ${CodesIndex}`);
+    }
+
+    if (totalCodes > 0 && Codes[CodesIndex].isActive === false) {
+      codeElements[currentIndex].innerText = Codes[CodesIndex].code;
+    }
+
+    CodesIndex = (CodesIndex + 1) % totalCodes;
+    currentIndex = (currentIndex + 1) % totalElements;
+    console.log(CodesIndex, currentIndex);
+  }, 3000);
+}
+
+

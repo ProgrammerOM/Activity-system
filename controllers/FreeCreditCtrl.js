@@ -1,8 +1,13 @@
 const fcs = require("../services/FreeCreditSve");
 
 const FreeCredit = async (req, res) => {
-  const Result = await fcs(req.body);
+  const Result = await fcs.FreeCredit(req.body)
   res.json(Result);
 };
 
-module.exports = FreeCredit;
+const SendClient = async (req,res) => {
+  const Result = await fcs.SendRandomClient()
+  res.json(Result)
+}
+
+module.exports = {FreeCredit,SendClient};

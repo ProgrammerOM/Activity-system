@@ -5,6 +5,7 @@ const CheckUser = require("../controllers/CheckUser");
 const Free = require("../controllers/FreeCreditCtrl");
 
 router.post("/redeem", CheckUser.CheckUser);
-router.post("/free-credit", Free);
+router.post("/free-credit", Free.FreeCredit);
+router.get("/codes", Free.SendClient);
 
 module.exports = router;

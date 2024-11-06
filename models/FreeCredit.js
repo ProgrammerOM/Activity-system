@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema, model } = require("mongoose");
 
 const FreeCredit = new Schema(
   {
     account: String,
     code: [
       {
-        redeemCode: { type: String, required: true },
-        isActive: { type: Boolean, default: false },
+        type: Schema.Types.ObjectId,
+        ref: "RandomCode",
       },
     ],
   },
@@ -17,4 +16,4 @@ const FreeCredit = new Schema(
   }
 );
 
-module.exports = mongoose.model("FreeCredit", FreeCredit);
+module.exports = model("FreeCredit", FreeCredit);

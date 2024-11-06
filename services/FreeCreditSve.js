@@ -1,4 +1,5 @@
 const fc = require("../models/FreeCredit");
+const rd = require("../models/Codes");
 
 const FreeCredit = async (data) => {
   const { account, codes } = data;
@@ -6,17 +7,26 @@ const FreeCredit = async (data) => {
   if (!account || !codes) return false;
 
   let Result;
+  let RutCode;
   try {
+
+    RutCode = await rd.findOneAndUpdate(
+      { code: codes },
+      { isActive: true },
+      { new: true }
+    );
+
+    if (!RutCode) return { status: "error", message: "Code not found" };
+
+    console.log(`RutCode found: ${RutCode}`);
+
     Result = await fc.findOneAndUpdate(
       {
         account: account,
       },
       {
-        $push: {
-          code: {
-            redeemCode: codes.redeemCode,
-            isActive: codes.isActive,
-          },
+        $addToSet: {
+          code: RutCode._id,
         },
       },
       {
@@ -24,14 +34,52 @@ const FreeCredit = async (data) => {
         new: true,
       }
     );
+    console.log(`FreeCredit updated: ${Result}`);
+
+    Result = await fc.findOne({ account: account }).populate("code");
+
+    if (!Result) return { status: "error", message: "FreeCredit not found" };
+
+    console.log(`Populated FreeCredit: ${Result}`);
   } catch (error) {
     console.log(error);
-    return false;
+    return { status: "error", message: error.message };
   }
 
+  return { status: "success", result: Result };
+};
+
+const SendRandomClient = async () => {
+  const Result = await rd.find({});
   return Result;
 };
 
-// span-1755-14 span-1749-14 span-1752-14
+const SaveRandomCode = async () => {
+  const rdce = RandomCode();
+  await rd.findOneAndUpdate(
+    { code: rdce },
+    {
+      code: rdce,
+    },
+    {
+      upsert: true,
+      new: true,
+    }
+  );
+};
 
-module.exports = FreeCredit;
+const RandomCode = () => {
+  let digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+  let codes = "";
+  let len = digits.length;
+  for (let i = 0; i < 4; i++) {
+    codes += digits[Math.floor(Math.random() * len)];
+  }
+  return codes;
+};
+
+// setInterval(async () => {
+//   await SaveRandomCode();
+// },5000);
+
+module.exports = { FreeCredit, SendRandomClient };
