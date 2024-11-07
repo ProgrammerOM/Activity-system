@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const ngrok = require("@ngrok/ngrok");
 const Cors = require("cors");
 const { readdirSync } = require("fs");
 const http = require("http");
@@ -38,4 +39,12 @@ app.use((req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
+  ngrok
+    .connect({ addr: port, authtoken_from_env: true })
+    .then((ngrokUrl) => {
+      console.log(`Ngork tuunel in: ${ngrokUrl.url()}`);
+    })
+    .catch((error) => {
+      console.log(`Couldn't tuunel ngork: ${error}`);
+    });
 });

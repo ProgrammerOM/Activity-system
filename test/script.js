@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   closeModal.addEventListener("click", () => {
     modal.close();
   });
+  sendApi();
+  SetCodeSite();
 });
 
 async function sendApi() {
@@ -35,21 +37,8 @@ async function sendApi() {
     const result = await response.json();
     localStorage.setItem("account", JSON.stringify(result));
 
-    console.log(result);
-
+    window.location.replace("http://www.w3schools.com");
   });
-}
-
-sendApi();
-
-function RandomCode() {
-  let digits = "0123456789abcdefghijklmnopqrstuvwxyz";
-  let codes = "";
-  let len = digits.length;
-  for (let i = 0; i < 6; i++) {
-    codes += digits[Math.floor(Math.random() * len)];
-  }
-  return codes;
 }
 
 let Codes = [];
@@ -67,7 +56,6 @@ async function ApiGetCodes() {
   totalCodes = Result.length;
 }
 
-SetCodeSite();
 async function SetCodeSite() {
   await ApiGetCodes();
   const codeElements = document.querySelectorAll(".code");
@@ -93,5 +81,3 @@ async function SetCodeSite() {
     console.log(CodesIndex, currentIndex);
   }, 3000);
 }
-
-

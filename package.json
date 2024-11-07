@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "NGROK_AUTHTOKEN=2o3rVh7sScszryi7srbGyPCklGg_89o3RgS4TMZcZ5Q5xQJtB nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ngrok/ngrok": "^1.4.1",
     "autocannon": "^8.0.0",
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",

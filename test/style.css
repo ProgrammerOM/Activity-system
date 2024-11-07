@@ -9,7 +9,6 @@
   margin: auto;
   border:none;
   border-radius: 14px;
-  position: relative;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 .close-button__dialog {
@@ -29,7 +28,7 @@
   border-radius: 100%;
   cursor: pointer;
 }
-.form {
+.modal__dialog .form {
   max-width: 100%;
 }
 .form__field {
