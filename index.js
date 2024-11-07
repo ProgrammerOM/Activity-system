@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://goat69.co", // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
+    origin: "https://goat69.net", // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
     methods: ["GET", "POST"],
   },
 });
@@ -39,12 +39,4 @@ app.use((req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
-  ngrok
-    .connect({ addr: port, authtoken_from_env: true })
-    .then((ngrokUrl) => {
-      console.log(`Ngork tuunel in: ${ngrokUrl.url()}`);
-    })
-    .catch((error) => {
-      console.log(`Couldn't tuunel ngork: ${error}`);
-    });
 });

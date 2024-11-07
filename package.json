@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NGROK_AUTHTOKEN=2o3rVh7sScszryi7srbGyPCklGg_89o3RgS4TMZcZ5Q5xQJtB nodemon index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
