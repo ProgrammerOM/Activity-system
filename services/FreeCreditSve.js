@@ -8,15 +8,15 @@ const FreeCredit = async (data) => {
 
   let Result;
   let RutCode;
+
   try {
+    RutCode = await rd.findOne({ code: codes });
 
-    RutCode = await rd.findOneAndUpdate(
-      { code: codes },
-      { isActive: true },
-      { new: true }
-    );
-
-    if (!RutCode) return { status: "error", message: "Code not found" };
+    if (!RutCode) {
+      return { status: "error", message: "Code not found" };
+    } else if (RutCode.isActive === true) {
+      return { status: "error", message: "Code ไม่สามารถใช้งานได้" };
+    }
 
     console.log(`RutCode found: ${RutCode}`);
 
@@ -35,6 +35,14 @@ const FreeCredit = async (data) => {
       }
     );
     console.log(`FreeCredit updated: ${Result}`);
+
+    RutCode = await rd.findOneAndUpdate(
+      { code: codes },
+      { isActive: true },
+      { new: true }
+    );
+
+    console.log(`Update IsActive: ${RutCode}`);
 
     Result = await fc.findOne({ account: account }).populate("code");
 
@@ -80,6 +88,6 @@ const RandomCode = () => {
 
 // setInterval(async () => {
 //   await SaveRandomCode();
-// },5000);
+// }, 5000);
 
 module.exports = { FreeCredit, SendRandomClient };
