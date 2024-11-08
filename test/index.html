@@ -11,19 +11,31 @@
     <p>Code 2: <span id="code2" class="code"></span></p>
     <p>Code 3: <span id="code3" class="code"></span></p>
     <dialog class="modal__dialog" id="modal__dialog">
-        <form class="form">
-          <div class="form__field">
-            <label class="form__label" for="Acc">Account</label>
-            <input class="form__input" type="text" name="account" id="Acc" />
-          </div>
-          <div class="form__field">
-            <label class="form__label" for="Ce">Code</label>
-            <input class="form__input" type="text" name="codes" id="Ce" />
-          </div>
-          <button class="form__submit" type="submit">send</button>
-        </form>
-        <button class="close-button__dialog">❌</button>
+      <form class="form">
+        <div class="form__field">
+          <label class="form__label" for="Acc">Account</label>
+          <input class="form__input" type="text" name="account" id="Acc" />
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="Ce">Code</label>
+          <input class="form__input" type="text" name="codes" id="Ce" />
+        </div>
+        <button class="form__submit" type="submit">send</button>
+      </form>
+      <button class="close-button__dialog">❌</button>
     </dialog>
+
+    <div class="send_message">
+      <div class="toast">
+        <div class="toast-content">
+          <div class="message">
+            <span class="text text-1">Success</span>
+            <span class="text text-2">Your changes has been saved</span>
+          </div>
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
 
     <button class="open-button__dialog">modal</button>
     <script src="script.js"></script>

@@ -1,15 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
+body {
+  font-family: "Kanit", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+.toast {
+  width: 300px;
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border-left: 6px solid #4070f4;
+  overflow: hidden;
+  transform: translateX(calc(100% + 30px));
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+  z-index: 10;
+}
+.toast.active {
+  transform: translateX(0%);
+}
+.toast .toast-content {
+  display: flex;
+  align-items: center;
+}
+.toast-content .message {
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+}
+/* .toast .progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #ddd;
+}
+.toast .progress::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #4070f4;
+}
+.progress.active::before {
+  animation: progress 2s linear forwards;
+}
+@keyframes progress {
+  100% {
+    right: 100%;
+  }
+} */
+.message .text {
+  font-size: 20px;
+  font-weight: 400;
+  color: #666666;
+}
+.message .text.text-1 {
+  font-weight: 500;
+  color: #333;
+}
+.message .text.text-2 {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.modal__hide {
+  display: none !important;
+}
 .modal__dialog {
   width: 300px;
   padding: 24px;
   margin: auto;
-  border:none;
+  border: none;
   border-radius: 14px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.modal__dialog::backdrop {
+  background: transparent;
 }
 .close-button__dialog {
   position: absolute;
@@ -31,6 +109,7 @@
 .modal__dialog .form {
   max-width: 100%;
 }
+
 .form__field {
   display: flex;
   flex-direction: column;
