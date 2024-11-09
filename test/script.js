@@ -90,48 +90,48 @@ function RenderHtml(result) {
 
 
 
-async function ApiGetCodes() {
-  const response = await fetch("http://localhost:8000/codes", {
-    method: "GET",
-  });
-  const Result = await response.json();
-  if (!Result) return;
-  Codes = Result;
-  totalCodes = Result.length;
-}
-
-async function SetCodeSite() {
-  await ApiGetCodes();
-  const codeElements = document.querySelectorAll(".code");
-  let totalElements = codeElements.length;
-
-  setInterval(async () => {
-    codeElements.forEach((el) => {
-      el.innerText = "";
+  async function ApiGetCodes() {
+    const response = await fetch("http://localhost:8000/codes", {
+      method: "GET",
     });
+    const Result = await response.json();
+    if (!Result) return;
+    Codes = Result;
+    totalCodes = Result.length;
+  }
 
-    while (Codes[CodesIndex].isActive && totalCodes > 0) {
-      console.log(`CodesIndex after ${CodesIndex}`);
+  async function SetCodeSite() {
+    await ApiGetCodes();
+    const codeElements = document.querySelectorAll(".code");
+    let totalElements = codeElements.length;
+
+    setInterval(async () => {
+      codeElements.forEach((el) => {
+        el.innerText = "";
+      });
+
+      while (Codes[CodesIndex].isActive && totalCodes > 0) {
+        console.log(`CodesIndex after ${CodesIndex}`);
+        CodesIndex = (CodesIndex + 1) % totalCodes;
+        console.log(`CodesIndex before ${CodesIndex}`);
+      }
+
+      if (totalCodes > 0 && Codes[CodesIndex].isActive === false) {
+        codeElements[currentIndex].style.color = RandomColor();
+        codeElements[currentIndex].innerText = Codes[CodesIndex].code;
+      }
+
       CodesIndex = (CodesIndex + 1) % totalCodes;
-      console.log(`CodesIndex before ${CodesIndex}`);
-    }
-
-    if (totalCodes > 0 && Codes[CodesIndex].isActive === false) {
-      codeElements[currentIndex].style.color = RandomColor();
-      codeElements[currentIndex].innerText = Codes[CodesIndex].code;
-    }
-
-    CodesIndex = (CodesIndex + 1) % totalCodes;
-    currentIndex = (currentIndex + 1) % totalElements;
-    console.log(CodesIndex, currentIndex);
-  }, 3000);
-}
+      currentIndex = (currentIndex + 1) % totalElements;
+      console.log(CodesIndex, currentIndex);
+    }, 3000);
+  }
 
 
-function RandomColor() {
-  let Colors = ["#ff0000", "#F75E25", "#ff00f1","#f1ff00"];
-  colortotal = Colors.length;
+  function RandomColor() {
+    let Colors = ["#ff0000", "#F75E25", "#ff00f1","#f1ff00"];
+    colortotal = Colors.length;
 
-  colorindex = (colorindex + 1) % colortotal;
-  return Colors[colorindex];
-}
+    colorindex = (colorindex + 1) % colortotal;
+    return Colors[colorindex];
+  }
