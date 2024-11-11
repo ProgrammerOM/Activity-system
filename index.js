@@ -9,8 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://goat69.net", // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
-    methods: ["GET", "POST"],
+    origin: ["https://goat69.net", "http://localhost:5500"], // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
+    methods: "*",
   },
 });
 
@@ -19,7 +19,20 @@ connectDB();
 const port = 8000;
 
 app.use(express.static("./"));
-app.use(Cors());
+app.use(
+  Cors({
+    origin: (origin, callback) => {
+      const allowedOrigins = ["https://goat69.net", "http://localhost:5500"];
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: "*",
+  })
+);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
