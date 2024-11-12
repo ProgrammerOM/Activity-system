@@ -58,7 +58,7 @@ const FreeCredit = async (data) => {
 };
 
 const SendRandomClient = async () => {
-  const Result = await rd.find({});
+  const Result = await rd.find({ isActive: false });
   return Result;
 };
 

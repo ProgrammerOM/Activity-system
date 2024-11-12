@@ -8,15 +8,62 @@ let isSubmitting = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.querySelector("#modal__dialog");
-  const openModal = document.querySelector(".open-button__dialog");
-  const closeModal = document.querySelector(".close-button__dialog");
-  const toast = document.querySelector(".toast");
-  const form = document.querySelector(".form");
+  modal__free = document.querySelector("#modal__freecredit");
+  announce = document.querySelector(".announce-freecredit");
+  openModal = document.querySelector(".open-button__dialog");
+  closeModal = document.querySelectorAll(".close-button__dialog");
+  stopModal = document.querySelector(".close-button__stop");
+  toast = document.querySelector(".toast");
+  message = document.querySelector(".message");
+  form = document.querySelector(".form");
+  Stepone = localStorage.getItem("StepOne");
+  Steptwo = localStorage.getItem("StepTwo");
+
+  const lastActivityDate = localStorage.getItem("lastActivityDate");
+  const currentDate = new Date();
+  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+
+  if (Stepone === "true" && Steptwo === "true") {
+    message.innerHTML = `
+            <span class="text text-1">Error</span>
+    <span class="text text-2">ไม่สามารถทำกิจกรรมนี้ได้</span>`;
+
+    ModalToast();
+
+    if (
+      lastActivityDate &&
+      currentDate - new Date(lastActivityDate) < oneDayInMilliseconds
+    ) {
+      announce.innerHTML = `<p>คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</p>`;
+      message.innerHTML = `
+      <span class="text text-1">Error</span>
+      <span class="text text-2">คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</span>`;
+
+
+
+      ModalToast();
+
+      // return;
+    }
+  }
+
+
+  stopModal.addEventListener("click", () => {
+    modal__free.close();
+    localStorage.setItem("modalClosed", "true");
+
+    return;
+  });
 
   openModal.addEventListener("click", () => {
+    const isModalClosed = localStorage.getItem("modalClosed");
+
+    if (isModalClosed === "true") {
+      return;
+    }
     toast.classList.add("active");
-    const Steptwo = localStorage.getItem("StepOne");
-    if (Steptwo) {
+    const Stepone = localStorage.getItem("StepOne");
+    if (Stepone) {
       console.log("steptwo");
       StepTwo();
     }
@@ -27,10 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.classList.remove("active");
     }, 2000);
   });
-
-  closeModal.addEventListener("click", () => {
-    form.reset();
-    modal.close();
+  closeModal.forEach((el) => {
+    el.addEventListener("click", () => {
+      form.reset();
+      modal__free.close();
+      modal.close();
+    });
   });
 
   SetCodeSite();
@@ -43,15 +92,14 @@ async function StepOne() {
     e.preventDefault();
 
     const modal = document.querySelector("#modal__dialog");
-     account = document.querySelector('input[name="account"]').value;
-     code = document.querySelector('input[name="codes"]').value;
-     toast = document.querySelector(".toast");
-     message = document.querySelector(".message");
+    account = document.querySelector('input[name="account"]').value;
+    code = document.querySelector('input[name="codes"]').value;
+    toast = document.querySelector(".toast");
+    message = document.querySelector(".message");
 
     if (isSubmitting) return; // ถ้ามีการส่งคำขออยู่แล้ว ให้หยุดการส่งคำขอใหม่
 
     isSubmitting = true; // กำหนด flag ว่ากำลังส่งคำขอ
- 
 
     if (account.length <= 0 || code.length <= 0) {
       message.innerHTML = `
@@ -73,7 +121,7 @@ async function StepOne() {
       codes: code,
     };
 
-    const response = await fetch("http://localhost:8000/free-credit", {
+    const response = await fetch("https://api.goat69.net/free-credit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,12 +158,15 @@ async function StepOne() {
     localStorage.setItem("StepOne", "true");
     localStorage.setItem("StepTwo", "false");
 
+    const currentDate = new Date();
+    localStorage.setItem("lastActivityDate", currentDate.toISOString());
+
     form.reset();
 
     toast.classList.add("active");
-    // setTimeout(() => {
-    //   window.location.replace("http://localhost:5500/test/");
-    // }, 3000);
+    setTimeout(() => {
+      window.location.replace("/promotions/");
+    }, 3000);
     isSubmitting = false;
     modal.close();
   });
@@ -126,15 +177,14 @@ async function StepTwo() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const modal = document.querySelector("#modal__dialog");
-     account = document.querySelector('input[name="account"]').value;
-     code = document.querySelector('input[name="codes"]').value;
-     toast = document.querySelector(".toast");
-     message = document.querySelector(".message");
+    account = document.querySelector('input[name="account"]').value;
+    code = document.querySelector('input[name="codes"]').value;
+    toast = document.querySelector(".toast");
+    message = document.querySelector(".message");
 
     if (isSubmitting) return; // ถ้ามีการส่งคำขออยู่แล้ว ให้หยุดการส่งคำขอใหม่
 
     isSubmitting = true; // กำหนด flag ว่ากำลังส่งคำขอ
-  
 
     if (account.length <= 0 || code.length <= 0) {
       message.innerHTML = `
@@ -154,7 +204,7 @@ async function StepTwo() {
       account: account,
       codes: code,
     };
-    const response = await fetch("http://localhost:8000/free-credit", {
+    const response = await fetch("https://api.goat69.net/free-credit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -190,9 +240,9 @@ async function StepTwo() {
     form.reset();
 
     toast.classList.add("active");
-    // setTimeout(() => {
-    //   window.location.replace("http://www.google.com");
-    // }, 3000);
+    setTimeout(() => {
+      window.location.replace("https://www.google.com/search?q=goatbet");
+    }, 3000);
     isSubmitting = false;
     modal.close();
   });
@@ -206,7 +256,7 @@ function RenderHtml(result) {
 }
 
 async function ApiPostForm(data) {
-  const response = await fetch("http://localhost:8000/free-credit", {
+  const response = await fetch("https://api.goat69.net/free-credit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -221,7 +271,7 @@ async function ApiPostForm(data) {
 }
 
 async function ApiGetCodes() {
-  const response = await fetch("http://localhost:8000/codes", {
+  const response = await fetch("https://api.goat69.net/codes", {
     method: "GET",
   });
   const Result = await response.json();
@@ -232,29 +282,30 @@ async function ApiGetCodes() {
 
 async function SetCodeSite() {
   await ApiGetCodes();
-  const codeElements = document.querySelectorAll(".code");
+  const codeElements = document.querySelectorAll(".RedeemCode");
+  console.log(codeElements)
   let totalElements = codeElements.length;
 
   setInterval(async () => {
-    codeElements.forEach((el) => {
-      el.innerText = "";
-    });
+    let Total = 0;
 
-    while (Codes[CodesIndex].isActive && totalCodes > 0) {
-      console.log(`CodesIndex after ${CodesIndex}`);
-      CodesIndex = (CodesIndex + 1) % totalCodes;
-      console.log(`CodesIndex before ${CodesIndex}`);
+    for (let i = 0; i < totalElements; i++) {
+      codeElements[i].innerHTML = "";
     }
 
-    if (totalCodes > 0 && Codes[CodesIndex].isActive === false) {
-      codeElements[currentIndex].style.color = RandomColor();
-      codeElements[currentIndex].innerText = Codes[CodesIndex].code;
+    while (Total < totalCodes) {
+      if (Codes[CodesIndex].isActive === false) {
+        codeElements[currentIndex].innerHTML = Codes[CodesIndex].code;
+      }
+      Total++;
     }
-
     CodesIndex = (CodesIndex + 1) % totalCodes;
     currentIndex = (currentIndex + 1) % totalElements;
-    console.log(CodesIndex, currentIndex);
-  }, 3000);
+
+    console.log(
+      `ตำแหน่งที่แสดง : ${currentIndex}  ข้อมูล : ${Codes[CodesIndex].code}`
+    );
+  }, 2000);
 }
 
 function RandomColor() {
@@ -264,3 +315,27 @@ function RandomColor() {
   colorindex = (colorindex + 1) % colortotal;
   return Colors[colorindex];
 }
+
+function ModalToast() {
+  toast.classList.add("active");
+
+  setTimeout(() => {
+    toast.classList.remove("active");
+  }, 5000);
+}
+
+function ModalAnnounce() {
+  const isModalClosed = localStorage.getItem("modalClosed");
+
+  if (isModalClosed === "true") {
+    return;
+  }
+
+  modal__free.showModal();
+
+  setTimeout(() => {
+    modal__free.close();
+  }, 5000);
+}
+
+

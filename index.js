@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["https://goat69.net", "http://localhost:5500"], // คุณสามารถระบุ origin ที่อนุญาตได้ เช่น 'http://127.0.0.1:5500'
+    origin: ["https://goat69.net", "http://localhost:5500"], 
     methods: "*",
   },
 });
