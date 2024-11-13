@@ -36,42 +36,18 @@ body {
   flex-direction: column;
   margin: 0 20px;
 }
-/* .toast .progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 3px;
-  width: 100%;
-  background: #ddd;
-}
-.toast .progress::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  background-color: #4070f4;
-}
-.progress.active::before {
-  animation: progress 2s linear forwards;
-}
-@keyframes progress {
-  100% {
-    right: 100%;
-  }
-} */
 .message .text {
   font-size: 20px;
   font-weight: 400;
   color: #666666;
 }
 .message .text.text-1 {
+  font-size: 16px;
   font-weight: 500;
   color: #333;
 }
 .message .text.text-2 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -89,7 +65,8 @@ body {
 .modal__dialog::backdrop {
   background: transparent;
 }
-.close-button__dialog {
+.close-button__dialog
+,.close-button__dialog-free{
   position: absolute;
   top: 5px;
   right: 5px;
@@ -144,7 +121,7 @@ body {
   background: transparent;
 }
 
-.close-button__stop {
+.close-button__stop-free {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -160,4 +137,7 @@ body {
   align-items: center;
   border-radius: 100%;
   cursor: pointer;
+}
+.code{
+  text-transform: uppercase;
 }

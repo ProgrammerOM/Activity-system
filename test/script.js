@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   modal__free = document.querySelector("#modal__freecredit");
   announce = document.querySelector(".announce-freecredit");
   openModal = document.querySelector(".open-button__dialog");
-  closeModal = document.querySelectorAll(".close-button__dialog");
-  stopModal = document.querySelector(".close-button__stop");
+  closeModal = document.querySelector(".close-button__dialog");
+  closeModalFree = document.querySelector(".close-button__dialog-free");
+  stopModal = document.querySelector(".close-button__stop-free");
   toast = document.querySelector(".toast");
   message = document.querySelector(".message");
   form = document.querySelector(".form");
@@ -22,6 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const lastActivityDate = localStorage.getItem("lastActivityDate");
   const currentDate = new Date();
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+
+  ModalAnnounce();
+
+  stopModal.addEventListener("click", () => {
+    modal__free.close();
+    localStorage.setItem("modalClosed", "true");
+  });
+
+  closeModalFree.addEventListener("click", () => {
+    modal__free.close();
+  });
 
   if (Stepone === "true" && Steptwo === "true") {
     message.innerHTML = `
@@ -39,28 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <span class="text text-1">Error</span>
       <span class="text text-2">คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</span>`;
 
-
-
       ModalToast();
-
-      // return;
+      return;
     }
   }
 
-
-  stopModal.addEventListener("click", () => {
-    modal__free.close();
-    localStorage.setItem("modalClosed", "true");
-
-    return;
-  });
-
   openModal.addEventListener("click", () => {
-    const isModalClosed = localStorage.getItem("modalClosed");
-
-    if (isModalClosed === "true") {
-      return;
-    }
     toast.classList.add("active");
     const Stepone = localStorage.getItem("StepOne");
     if (Stepone) {
@@ -74,12 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.classList.remove("active");
     }, 2000);
   });
-  closeModal.forEach((el) => {
-    el.addEventListener("click", () => {
-      form.reset();
-      modal__free.close();
-      modal.close();
-    });
+
+  closeModal.addEventListener("click", () => {
+    form.reset();
+    modal__free.close();
+    modal.close();
   });
 
   SetCodeSite();
@@ -97,9 +92,9 @@ async function StepOne() {
     toast = document.querySelector(".toast");
     message = document.querySelector(".message");
 
-    if (isSubmitting) return; // ถ้ามีการส่งคำขออยู่แล้ว ให้หยุดการส่งคำขอใหม่
+    if (isSubmitting) return;
 
-    isSubmitting = true; // กำหนด flag ว่ากำลังส่งคำขอ
+    isSubmitting = true;
 
     if (account.length <= 0 || code.length <= 0) {
       message.innerHTML = `
@@ -121,25 +116,11 @@ async function StepOne() {
       codes: code,
     };
 
-    const response = await fetch("https://api.goat69.net/free-credit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      isSubmitting = false; // รีเซ็ต flag เมื่อเกิดข้อผิดพลาด
-      return console.log("Failed to fetch:", response.status);
-    }
-
-    const Result = await response.json();
-
-    // const Result = await ApiPostForm(Data);
+    const Result = await ApiPostForm(data);
 
     if (Result.status === "error") {
       message.innerHTML = RenderHtml(Result);
+
       toast.classList.add("active");
 
       form.reset();
@@ -182,9 +163,9 @@ async function StepTwo() {
     toast = document.querySelector(".toast");
     message = document.querySelector(".message");
 
-    if (isSubmitting) return; // ถ้ามีการส่งคำขออยู่แล้ว ให้หยุดการส่งคำขอใหม่
+    if (isSubmitting) return;
 
-    isSubmitting = true; // กำหนด flag ว่ากำลังส่งคำขอ
+    isSubmitting = true;
 
     if (account.length <= 0 || code.length <= 0) {
       message.innerHTML = `
@@ -204,21 +185,8 @@ async function StepTwo() {
       account: account,
       codes: code,
     };
-    const response = await fetch("https://api.goat69.net/free-credit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
 
-    if (!response.ok) {
-      isSubmitting = false;
-      return console.log("Failed to fetch:", response.status);
-    }
-
-    const Result = await response.json();
-    // const Result = await ApiPostForm(Data);
+    const Result = await ApiPostForm(data);
 
     if (Result.status === "error") {
       message.innerHTML += RenderHtml(Result);
@@ -256,7 +224,7 @@ function RenderHtml(result) {
 }
 
 async function ApiPostForm(data) {
-  const response = await fetch("https://api.goat69.net/free-credit", {
+  const response = await fetch("http://localhost:8000/free-credit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -264,14 +232,16 @@ async function ApiPostForm(data) {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) return console.log("Failed to fetch:", response.status);
+  if (!response.ok) {
+    return console.log("Failed to fetch:", response.status);
+  }
 
   const result = await response.json();
   return result;
 }
 
 async function ApiGetCodes() {
-  const response = await fetch("https://api.goat69.net/codes", {
+  const response = await fetch("http://localhost:8000/codes", {
     method: "GET",
   });
   const Result = await response.json();
@@ -282,8 +252,8 @@ async function ApiGetCodes() {
 
 async function SetCodeSite() {
   await ApiGetCodes();
-  const codeElements = document.querySelectorAll(".RedeemCode");
-  console.log(codeElements)
+  const codeElements = document.querySelectorAll(".code");
+  console.log(codeElements);
   let totalElements = codeElements.length;
 
   setInterval(async () => {
@@ -295,6 +265,7 @@ async function SetCodeSite() {
 
     while (Total < totalCodes) {
       if (Codes[CodesIndex].isActive === false) {
+        codeElements[currentIndex].style.color = RandomColor();
         codeElements[currentIndex].innerHTML = Codes[CodesIndex].code;
       }
       Total++;
@@ -331,11 +302,10 @@ function ModalAnnounce() {
     return;
   }
 
+  const modal__free = document.querySelector("#modal__freecredit");
   modal__free.showModal();
 
   setTimeout(() => {
     modal__free.close();
   }, 5000);
 }
-
-

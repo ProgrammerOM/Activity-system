@@ -22,7 +22,7 @@ app.use(express.static("./"));
 app.use(
   Cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["https://goat69.net", "http://localhost:5500"];
+      const allowedOrigins = ["https://goat69.net", "http://localhost:5500",'http://127.0.0.1:5500'];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
