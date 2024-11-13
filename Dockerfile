@@ -1,5 +1,5 @@
 # ขั้นตอนที่ 1: เลือก base image
-FROM node:16
+FROM node:22-alpine3.19
 
 # ขั้นตอนที่ 2: กำหนด working directory ใน container
 WORKDIR /usr/src/app
