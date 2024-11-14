@@ -106,7 +106,7 @@ async function StepOne() {
       setTimeout(() => {
         toast.classList.remove("active");
       }, 5000);
-      isSubmitting = false; // รีเซ็ต flag เมื่อเสร็จสิ้น
+      isSubmitting = false; 
 
       return;
     }
