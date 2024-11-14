@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ngrok = require("@ngrok/ngrok");
+const Layouts = require('express-ejs-layouts')
 const Cors = require("cors");
 const { readdirSync } = require("fs");
 const http = require("http");
@@ -19,6 +20,13 @@ connectDB();
 const port = 8000;
 
 app.use(express.static("./"));
+app.use(express.static(__dirname))
+app.use(express.static('public'))
+
+app.use(Layouts)
+app.set()
+app.set('layout','./layouts/main')
+app.set('view engine','ejs')
 app.use(
   Cors({
     origin: (origin, callback) => {

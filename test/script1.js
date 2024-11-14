@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModalFree = document.querySelector(".close-button__dialog-free");
   const stopModal = document.querySelector(".close-button__stop-free");
 
-  ModalAnnounce();
+  // ModalAnnounce();
 
   stopModal.addEventListener("click", () => {
     modal__free.close();
@@ -109,9 +109,9 @@ async function handleStep() {
       if (isStepOne) {
         window.location.replace("/promotions/");
       } else if (isStepTwo) {
-        window.location.replace("https://www.google.com/search?q=goatbet");
+        window.open("https://www.google.com/search?q=goatbet", "_blank");
       }
-    }, 5000);
+    }, 2000);
 
     isSubmitting = false;
     CloseModal();
@@ -198,18 +198,50 @@ function CheckShowModal() {
   const lastActivityDate = localStorage.getItem("lastActivityDate");
   const currentDate = new Date();
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-  if (isStepOne === "true" && isSteptwo === "true") {
+
+  const targetDate = new Date("2024-11-14T07:21:26.021Z");
+  const timeDifferenceInMilliseconds = targetDate - currentDate;
+
+  if (
+    lastActivityDate &&
+    currentDate - new Date(lastActivityDate) >= oneDayInMilliseconds
+  ) {
+    localStorage.clear();
+
     message.innerHTML = `
-                  <span class="text text-1">Error</span>
-          <span class="text text-2">ไม่สามารถทำกิจกรรมนี้ได้</span>`;
+    <span class="text text-1">Success</span>
+    <span class="text text-2">เริ่มกิจกรรม</span>`;
 
     ModalToast();
+    OpenModal();
+    handleStep();
+    return;
+  }
 
+  if (isStepOne === "true" && isSteptwo === "true") {
     if (
       lastActivityDate &&
       currentDate - new Date(lastActivityDate) < oneDayInMilliseconds
     ) {
-      announce.innerHTML = `<p>คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</p>`;
+      const lastDate = new Date(lastActivityDate);
+      const nextAvailableDate = new Date(
+        lastDate.getTime() + oneDayInMilliseconds
+      );
+
+      // ฟอร์แมตวันที่เป็นรูปแบบที่อ่านง่าย
+      const formattedDate = nextAvailableDate.toLocaleString("th-TH", {
+        weekday: "long", // แสดงวัน (เช่น "วันจันทร์")
+        year: "numeric", // แสดงปี
+        month: "long", // แสดงเดือน (เช่น "มกราคม")
+        day: "numeric", // แสดงวัน (เช่น 25)
+        hour: "2-digit", // แสดงเวลา
+        minute: "2-digit",
+        second: "2-digit",
+      });
+
+      console.log(formattedDate);
+
+      // announce.innerHTML = `<p>คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</p>`;
       message.innerHTML = `
             <span class="text text-1">Error</span>
             <span class="text text-2">คุณสามารถทำกิจกรรมได้แค่วันละครั้ง</span>`;
