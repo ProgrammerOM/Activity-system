@@ -1,4 +1,9 @@
-const socket = io(); // เชื่อมต่อกับ Socket.io server
+const socket = io("", {
+  path: "/socket.io",
+  transports: ["websocket"],
+  secure: true,
+});
+
 let currentPage = 1;
 let rowsPerPage = 15;
 let displayedData = [];

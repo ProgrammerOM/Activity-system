@@ -10,6 +10,8 @@ const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
+  path: "/socket.io",
+  transports: ["websocket"],
   cors: {
     origin: ["https://goat69.net","https://api.goat69.net", "http://localhost:8000"], 
     methods: "*",
