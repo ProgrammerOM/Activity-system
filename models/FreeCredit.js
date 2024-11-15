@@ -3,12 +3,6 @@ const { Schema, model } = require("mongoose");
 const FreeCredit = new Schema(
   {
     account: String,
-    code: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "RandomCode",
-      },
-    ],
     firstCode: [
       {
         type: Schema.Types.ObjectId,
@@ -21,6 +15,11 @@ const FreeCredit = new Schema(
         ref: "RandomCode",
       },
     ],
+    status:{
+      type: String,
+      enum: ['ยังไม่ได้เติม', "เติมแล้ว"],
+      default: "ยังไม่ได้เติม",
+    }
   },
   {
     timestamps: true,
