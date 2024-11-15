@@ -106,8 +106,8 @@ const RandomCode = () => {
   return codes;
 };
 
-setInterval(async () => {
-  await SaveRandomCode();
-}, 2000);
+// setInterval(async () => {
+//   await SaveRandomCode();
+// }, 2000);
 
 module.exports = { FreeCredit, SendRandomClient };
