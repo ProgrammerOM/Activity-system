@@ -31,164 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
   SetCodeSite();
 });
 
-async function handleStep() {
-  const form = document.querySelector(".form");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const modal = document.querySelector("#modal__dialog");
-    account = document.querySelector('input[name="account"]').value;
-    code = document.querySelector('input[name="codes"]').value;
-    toast = document.querySelector(".toast");
-    message = document.querySelector(".message");
-
-    if (isSubmitting) return;
-
-    isSubmitting = true;
-
-    if (account.length <= 0 || code.length <= 0) {
-      message.innerHTML = `
-            <span class="text text-1">Error</span>
-    <span class="text text-2">กรุณากรอกยูสเซอร์ และ โค้ด</span>`;
-
-      ModalToast();
-      isSubmitting = false;
-
-      return;
-    }
-
-    const data = {
-      account: account,
-      codes: code,
-    };
-
-    const Result = await ApiPostForm(data);
-
-    if (Result.status === "error") {
-      message.innerHTML = RenderHtml(Result);
-
-      form.reset();
-      ModalToast();
-
-      isSubmitting = false;
-      CloseModal();
-
-      return;
-    } else {
-      message.innerHTML = RenderHtml(Result);
-      ModalToast();
-    }
-
-    ModalToast();
-
-    localStorage.setItem("account", JSON.stringify(Result));
-
-    const isStepOne = !localStorage.getItem("StepOne");
-    const isStepTwo =
-      localStorage.getItem("StepOne") === "true" &&
-      localStorage.getItem("StepTwo") === "false";
-    console.log(isStepTwo);
-
-    if (isStepOne) {
-      localStorage.setItem("StepOne", "true");
-      localStorage.setItem("StepTwo", "false");
-    } else if (isStepTwo) {
-      localStorage.setItem("StepTwo", "true");
-    }
-
-    const lastActivityDate = !localStorage.getItem("lastActivityDate");
-    if (lastActivityDate) {
-      const currentDate = new Date();
-      localStorage.setItem("lastActivityDate", currentDate.toISOString());
-    }
-
-    form.reset();
-
-    setTimeout(() => {
-      if (isStepOne) {
-        window.location.replace("/promotions/");
-      } else if (isStepTwo) {
-        window.open("https://www.google.com/search?q=goatbet", "_blank");
-      }
-    }, 2000);
-
-    isSubmitting = false;
-    CloseModal();
-  });
-}
-
-function RenderHtml(result) {
-  return `
-  <span class="text text-1">${result.status}</span>
-  <span class="text text-2">${result.message}</span>
-`;
-}
-
-async function ApiPostForm(data) {
-  const response = await fetch("https://api.goat69.net/free-credit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    return console.log("Failed to fetch:", response.status);
-  }
-
-  const result = await response.json();
-  return result;
-}
-
-async function ApiGetCodes() {
-  const response = await fetch("https://api.goat69.net/codes", {
-    method: "GET",
-  });
-  const Result = await response.json();
-  if (!Result) return;
-  Codes = Result;
-  totalCodes = Result.length;
-}
-
-async function SetCodeSite() {
-  await ApiGetCodes();
-  const codeElements = document.querySelectorAll(".code");
-  console.log(codeElements);
-  let totalElements = codeElements.length;
-
-  setInterval(async () => {
-    let Total = 0;
-
-    for (let i = 0; i < totalElements; i++) {
-      codeElements[i].innerHTML = "";
-    }
-
-    while (Total < totalCodes) {
-      if (Codes[CodesIndex].isActive === false) {
-        codeElements[currentIndex].style.color = RandomColor();
-        codeElements[currentIndex].innerHTML = Codes[CodesIndex].code;
-      }
-      Total++;
-    }
-    CodesIndex = (CodesIndex + 1) % totalCodes;
-    currentIndex = (currentIndex + 1) % totalElements;
-
-    console.log(
-      `ตำแหน่งที่แสดง : ${currentIndex}  ข้อมูล : ${Codes[CodesIndex].code}`
-    );
-  }, 5000);
-}
-
-function RandomColor() {
-  let Colors = ["#ff0000", "#F75E25", "#ff00f1", "#f1ff00"];
-  colortotal = Colors.length;
-
-  colorindex = (colorindex + 1) % colortotal;
-  return Colors[colorindex];
-}
-
 function CheckShowModal() {
   const announce = document.querySelector(".announce-freecredit");
   const message = document.querySelector(".message");
@@ -260,6 +102,196 @@ function CheckShowModal() {
     OpenModal();
     handleStep();
   }
+}
+
+async function handleStep() {
+  const form = document.querySelector(".form");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const modal = document.querySelector("#modal__dialog");
+    account = document.querySelector('input[name="account"]').value;
+    code = document.querySelector('input[name="codes"]').value;
+    toast = document.querySelector(".toast");
+    message = document.querySelector(".message");
+
+    const StepOne = localStorage.getItem("StepOne");
+    const StepTwo = localStorage.getItem("StepTwo");
+    const code1 = sessionStorage.getItem("Code_1");
+    const code2 = sessionStorage.getItem("Code_2");
+    console.log(code1, code2);
+
+    if (isSubmitting) return;
+
+    isSubmitting = true;
+
+    if (account.length <= 0 || code.length <= 0) {
+      message.innerHTML = `
+            <span class="text text-1">Error</span>
+    <span class="text text-2">กรุณากรอกยูสเซอร์ และ โค้ด</span>`;
+
+      ModalToast();
+      isSubmitting = false;
+
+      return;
+    }
+
+    // เซ็ต Code_1 และ Code_2 ตามขั้นตอน
+    if (!StepOne && !code1) {
+      // ถ้าเป็น StepOne และ Code_1 ยังไม่ถูกเซ็ต
+      sessionStorage.setItem("Code_1", `${code}`);
+      console.log("Code_1 Set:", code);
+    } else if (StepOne === "true" && !code2) {
+      // ถ้าเป็น StepTwo และ Code_2 ยังไม่ถูกเซ็ต
+      sessionStorage.setItem("Code_2", `${code}`);
+      console.log("Code_2 Set:", code);
+    }
+
+    // เมื่อ Code_1 และ Code_2 ถูกเซ็ตแล้ว
+    const updatedCode1 = sessionStorage.getItem("Code_1");
+    const updatedCode2 = sessionStorage.getItem("Code_2");
+
+    if (updatedCode1 && updatedCode2) {
+      const data = {
+        account: account,
+        codes: [`${updatedCode1}`, `${updatedCode2}`],
+      };
+
+      // ส่งข้อมูลไปยัง API
+      const Result = await ApiPostForm(data);
+
+      if (Result.status === "error") {
+        message.innerHTML = RenderHtml(Result);
+        sessionStorage.clear();
+
+        form.reset();
+        ModalToast();
+
+        isSubmitting = false;
+        CloseModal();
+
+        return;
+      } else {
+        message.innerHTML = RenderHtml(Result);
+        sessionStorage.clear();
+        ModalToast();
+      }
+
+      // ส่งข้อมูลสำเร็จ
+      localStorage.setItem("account", JSON.stringify(Result));
+    }
+    const isStepOne = !localStorage.getItem("StepOne");
+    const isStepTwo =
+      localStorage.getItem("StepOne") === "true" &&
+      localStorage.getItem("StepTwo") === "false";
+    console.log(isStepTwo);
+
+    if (isStepOne) {
+      localStorage.setItem("StepOne", "true");
+      localStorage.setItem("StepTwo", "false");
+    } else if (isStepTwo) {
+      localStorage.setItem("StepTwo", "true");
+    }
+
+    const lastActivityDate = !localStorage.getItem("lastActivityDate");
+    if (lastActivityDate) {
+      const currentDate = new Date();
+      localStorage.setItem("lastActivityDate", currentDate.toISOString());
+    }
+
+    form.reset();
+
+    setTimeout(() => {
+      if (isStepOne) {
+        window.location.replace("/promotions/");
+      } else if (isStepTwo) {
+        window.open("https://www.google.com/search?q=goatbet", "_blank");
+      }
+    }, 2000);
+
+    isSubmitting = false;
+    CloseModal();
+  });
+}
+
+function RenderHtml(result) {
+  return `
+  <span class="text text-1">${result.status}</span>
+  <span class="text text-2">${result.message}</span>
+`;
+}
+
+async function ApiPostForm(data) {
+  const response = await fetch("http://localhost:8000/free-credit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    return console.log("Failed to fetch:", response.status);
+  }
+
+  const result = await response.json();
+  return result;
+}
+
+async function ApiGetCodes() {
+  const response = await fetch("http://localhost:8000/codes", {
+    method: "GET",
+  });
+  const Result = await response.json();
+  if (!Result) return;
+  Codes = Result;
+  totalCodes = Result.length;
+}
+
+async function SetCodeSite() {
+  await ApiGetCodes();
+  const codeElements = document.querySelectorAll(".code");
+  console.log(codeElements);
+  let totalElements = codeElements.length;
+
+  setInterval(async () => {
+    let Total = 0;
+
+    for (let i = 0; i < totalElements; i++) {
+      codeElements[i].innerHTML = "";
+    }
+
+    const code1 = sessionStorage.getItem("Code_1");
+    if (code1 === Codes[CodesIndex].code) {
+      console.log(`Code_1: ${code1} Random: ${Codes[CodesIndex].code}`);
+
+      CodesIndex = (CodesIndex + 1) % totalCodes;
+      return;
+    }
+
+    while (Total < totalCodes) {
+      if (Codes[CodesIndex].isActive === false) {
+        codeElements[currentIndex].style.color = RandomColor();
+        codeElements[currentIndex].innerHTML = Codes[CodesIndex].code;
+      }
+      Total++;
+    }
+    CodesIndex = (CodesIndex + 1) % totalCodes;
+    currentIndex = (currentIndex + 1) % totalElements;
+
+    console.log(
+      `ตำแหน่งที่แสดง : ${currentIndex}  ข้อมูล : ${Codes[CodesIndex].code}`
+    );
+  }, 2000);
+}
+
+function RandomColor() {
+  let Colors = ["#ff0000", "#F75E25", "#ff00f1", "#f1ff00"];
+  colortotal = Colors.length;
+
+  colorindex = (colorindex + 1) % colortotal;
+  return Colors[colorindex];
 }
 
 function OpenModal() {

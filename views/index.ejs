@@ -1,1 +1,39 @@
-<h1>hello word</h1>
+<div class="min-h-full">
+  <div class="container mx-auto p-4">
+    <div class="mb-4 flex justify-between items-center">
+      <input type="text" id="searchInput" class="border p-2 rounded-lg shadow-sm w-1/4" placeholder="Search...">
+      <span id="paginationInfo" class="text-gray-700 text-sm"></span>
+    </div>
+
+    <table id="customTable" class="table-auto w-full bg-white shadow-md rounded-lg">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2">Date</th>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">Account</th>
+          <th class="px-4 py-2">First Code</th>
+          <th class="px-4 py-2">Second Code</th>
+          <th class="px-4 py-2">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Data will be inserted here dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="mt-4 flex justify-between items-center">
+      <div class="flex space-x-2">
+        <button id="prevPageBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hidden">Previous</button>
+        
+        <div id="pageNumbers" class="flex space-x-2">
+          <!-- Page numbers will be dynamically generated here -->
+        </div>
+        
+        <button id="nextPageBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hidden">Next</button>
+      </div>
+
+      <span id="paginationInfo" class="text-gray-700 text-sm"></span>
+    </div>
+  </div>
+</div>

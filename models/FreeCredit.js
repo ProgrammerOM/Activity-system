@@ -9,6 +9,18 @@ const FreeCredit = new Schema(
         ref: "RandomCode",
       },
     ],
+    firstCode: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "RandomCode",
+      },
+    ],
+    secondCode: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "RandomCode",
+      },
+    ],
   },
   {
     timestamps: true,

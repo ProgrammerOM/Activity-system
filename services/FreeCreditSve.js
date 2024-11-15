@@ -4,47 +4,69 @@ const rd = require("../models/Codes");
 const FreeCredit = async (data) => {
   const { account, codes } = data;
 
+  console.log(codes);
+
   if (!account || !codes) return false;
 
   let Result;
   let RutCode;
 
   try {
-    RutCode = await rd.findOne({ code: codes });
+    const [Code_1, Code_2] = await Promise.all(
+      codes.map((code) => rd.findOne({ code }).exec())
+    );
 
-    if (!RutCode) {
+    console.log(Code_1, Code_2);
+
+    if (!Code_1 || !Code_2) {
       return { status: "error", message: "Code not found" };
-    } else if (RutCode.isActive === true) {
+    } else if (Code_1.isActive === true || Code_2.isActive === true) {
       return { status: "error", message: "Code ไม่สามารถใช้งานได้" };
     }
 
-    console.log(`RutCode found: ${RutCode}`);
+    console.log(`RutCode found: ${Code_1} ${Code_2}`);
 
-    Result = await fc.findOneAndUpdate(
-      {
+    Result = await fc
+      .create({
         account: account,
-      },
-      {
-        $addToSet: {
-          code: RutCode._id,
-        },
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
+        code: [Code_1._id],
+        firstCode: [Code_1._id],
+        secondCode: [Code_2._id],
+      })
+ 
+
     console.log(`FreeCredit updated: ${Result}`);
 
-    RutCode = await rd.findOneAndUpdate(
-      { code: codes },
-      { isActive: true },
-      { new: true }
-    );
+    RutCode = await Promise.all([
+      rd.findOneAndUpdate(
+        { code: codes[0] },
+        { isActive: true },
+        { new: true }
+      ),
+      rd.findOneAndUpdate(
+        { code: codes[1] },
+        { isActive: true },
+        { new: true }
+      ),
+    ]); 
 
     console.log(`Update IsActive: ${RutCode}`);
 
-    Result = await fc.findOne({ account: account }).populate("code");
+    Result = await fc
+      .findOne({ _id: Result._id })
+      .populate("code")
+      .populate("firstCode")
+      .populate("secondCode");
+
+ 
+      _io.emit("UpdateData", {
+        _id: Result._id,
+        account: Result.account,
+        firstCode: Result.firstCode[0].code,
+        secondCode: Result.secondCode[0].code,
+        createdAt: Result.createdAt,
+        updatedAt: Result.updatedAt,
+      });
 
     if (!Result) return { status: "error", message: "FreeCredit not found" };
 
@@ -86,8 +108,8 @@ const RandomCode = () => {
   return codes;
 };
 
-// setInterval(async () => {
-//   await SaveRandomCode();
-// }, 5000);
+setInterval(async () => {
+  await SaveRandomCode();
+}, 2000);
 
 module.exports = { FreeCredit, SendRandomClient };

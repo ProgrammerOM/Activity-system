@@ -1,5 +1,8 @@
-const PageHome = (req, res) => {
-   res.render('index')
+const PageSve = require("../services/PageSve");
+
+const PageHome = async (req, res) => {
+  const Result = await PageSve();
+  res.render("index");
 };
 
 module.exports = PageHome;
