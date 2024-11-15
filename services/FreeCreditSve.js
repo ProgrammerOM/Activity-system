@@ -62,6 +62,7 @@ const FreeCredit = async (data) => {
         account: Result.account,
         firstCode: Result.firstCode[0].code,
         secondCode: Result.secondCode[0].code,
+        status: Result.status,
         createdAt: Result.createdAt,
         updatedAt: Result.updatedAt,
       });

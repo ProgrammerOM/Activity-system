@@ -23,6 +23,7 @@ async function SendData() {
         account: item.account,
         firstCode: item.firstCode[0].code,
         secondCode: item.secondCode[0].code,
+        status: item.status,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
       });

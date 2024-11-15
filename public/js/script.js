@@ -32,7 +32,8 @@ function renderTable(data) {
       item.account.match(searchRegex) ||
       item._id.match(searchRegex) ||
       item.firstCode.match(searchRegex) ||
-      item.secondCode.match(searchRegex)
+      item.secondCode.match(searchRegex) ||
+      item.status.match(searchRegex)
   );
 
   // เรียงข้อมูลจากใหม่ไปเก่า
@@ -73,7 +74,7 @@ function renderTable(data) {
         <td class="px-4 py-2 font-light text-center">${item.firstCode}</td>
         <td class="px-4 py-2 font-light text-center">${item.secondCode}</td>
         <td class="px-4 py-2 font-light text-center">${fillTime}</td>
-        <td class="px-4 py-2 font-light text-center">ยังไม่ได้เติม</td>
+        <td class="px-4 py-2 font-light text-center">${item.status}</td>
         <td class="px-4 py-2 font-light text-center">
         <button class="bg-red-500 text-white p-2 rounded-lg">เรียบร้อย</button>
         </td>
