@@ -6,6 +6,20 @@ let searchQuery = "";
 
 const maxPageLinks = 3; // จำนวนลิงก์หน้าสูงสุดที่จะแสดง
 
+let notificationsEnabled = false; // สถานะการเปิดใช้งานเสียงแจ้งเตือน
+
+// ฟังก์ชันเปิดใช้งานการแจ้งเตือน (จากการโต้ตอบเริ่มต้น)
+function enableNotifications() {
+  if (!notificationsEnabled) {
+    notificationsEnabled = true;
+    const sound = document.getElementById("notificationSound");
+    sound.play().catch((error) => {
+      console.error("ไม่สามารถเล่นเสียงได้:", error);
+    });
+  }
+}
+
+
 // ฟังก์ชันที่ใช้ในการแสดงข้อมูลในตาราง
 function renderTable(data) {
   const tableBody = document.getElementById("tableBody");
@@ -50,7 +64,6 @@ function renderTable(data) {
       ).padStart(2, "0")}`;
 
       const fillTime = getFillTime(date);
-
 
       return `
       <tr>
@@ -132,6 +145,7 @@ socket.on("UpdateData", (newData) => {
   console.log("Received new update:", newData);
   displayedData.push(newData);
   renderTable(displayedData); // Re-render after update data is received
+  enableNotifications();
 });
 
 // ปุ่ม Previous และ Next
@@ -150,11 +164,10 @@ document.getElementById("nextPageBtn").addEventListener("click", () => {
   }
 });
 
-
 // ฟังก์ชันคำนวณเวลาที่ต้องเติม
 function getFillTime(date) {
   const hour = date.getHours();
-  
+
   if (hour >= 0 && hour < 6) {
     return "เติมก่อน 10:00";
   } else if (hour >= 6 && hour < 12) {
