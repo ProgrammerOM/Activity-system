@@ -48,16 +48,21 @@ function renderTable(data) {
       )}:${String(date.getMinutes()).padStart(2, "0")}:${String(
         date.getSeconds()
       ).padStart(2, "0")}`;
+
+      const fillTime = getFillTime(date);
+
+
       return `
       <tr>
-        <td class="px-4 py-2 text-center">${formattedDate}</td>
-        <td class="px-4 py-2 text-center">${item._id}</td>
-        <td class="px-4 py-2 text-center">${item.account}</td>
-        <td class="px-4 py-2 text-center">${item.firstCode}</td>
-        <td class="px-4 py-2 text-center">${item.secondCode}</td>
-        <td class="px-4 py-2 text-center">ยังไม่ได้เติม</td>
-        <td class="px-4 py-2 text-center">
-        <button>เรียบร้อย</button>
+        <td class="px-4 py-2 font-light text-center">${formattedDate}</td>
+        <td class="px-4 py-2 font-light text-center">${item._id}</td>
+        <td class="px-4 py-2 font-light text-center">${item.account}</td>
+        <td class="px-4 py-2 font-light text-center">${item.firstCode}</td>
+        <td class="px-4 py-2 font-light text-center">${item.secondCode}</td>
+        <td class="px-4 py-2 font-light text-center">${fillTime}</td>
+        <td class="px-4 py-2 font-light text-center">ยังไม่ได้เติม</td>
+        <td class="px-4 py-2 font-light text-center">
+        <button class="bg-red-500 text-white p-2 rounded-lg">เรียบร้อย</button>
         </td>
       </tr>
     `;
@@ -144,3 +149,19 @@ document.getElementById("nextPageBtn").addEventListener("click", () => {
     renderTable(displayedData); // Render when Next is clicked
   }
 });
+
+
+// ฟังก์ชันคำนวณเวลาที่ต้องเติม
+function getFillTime(date) {
+  const hour = date.getHours();
+  
+  if (hour >= 0 && hour < 6) {
+    return "เติมก่อน 10:00";
+  } else if (hour >= 6 && hour < 12) {
+    return "เติมก่อน 14:00";
+  } else if (hour >= 12 && hour < 18) {
+    return "เติมก่อน 20:00";
+  } else if (hour >= 18 && hour < 24) {
+    return "เติมก่อน 02:00";
+  }
+}
