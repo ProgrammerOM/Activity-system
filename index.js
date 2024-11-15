@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["https://goat69.net", "http://localhost:5500"], 
+    origin: ["https://goat69.net", "http://localhost:8000"], 
     methods: "*",
   },
 });
@@ -33,7 +33,7 @@ app.set('view engine','ejs')
 app.use(
   Cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["https://goat69.net", "http://localhost:5500",'http://127.0.0.1:5500'];
+      const allowedOrigins = ["https://goat69.net", "http://localhost:8000",'http://127.0.0.1:8000'];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
