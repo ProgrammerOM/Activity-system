@@ -139,8 +139,21 @@ document.getElementById("searchInput").addEventListener("input", (event) => {
 
 // เพิ่มข้อมูลใหม่จากเซิร์ฟเวอร์
 socket.on("Data", (data) => {
-  displayedData.push(data);
-  renderTable(displayedData); // Re-render after data is received
+  console.log("Received Data:", data);
+
+  if (!displayedData.some((item) => item._id === data._id)) {
+    // ถ้าไม่มีก็เพิ่มข้อมูล
+    displayedData.push(data);
+    sessionStorage.setItem("displayedData", JSON.stringify(displayedData)); // เก็บข้อมูลใน sessionStorage
+    renderTable(displayedData); // Re-render after data is received
+  }
+});
+window.addEventListener("load", () => {
+  const savedData = sessionStorage.getItem("displayedData");
+  if (savedData) {
+    displayedData = JSON.parse(savedData);
+    renderTable(displayedData); // เรนเดอร์ข้อมูลจาก sessionStorage
+  }
 });
 
 // การอัปเดตข้อมูลใหม่
@@ -148,6 +161,7 @@ socket.on("UpdateData", (newData) => {
   console.log("Received new update:", newData);
   displayedData.push(newData);
   renderTable(displayedData); // Re-render after update data is received
+  sessionStorage.setItem("displayedData", JSON.stringify(displayedData)); // เก็บข้อมูลใน sessionStorage
   enableNotifications();
 });
 
@@ -160,6 +174,7 @@ socket.on("UpdateStatus", (newData) => {
   if (updatedItemIndex !== -1) {
     displayedData[updatedItemIndex].status = newData.status;
     renderTable(displayedData);
+    sessionStorage.setItem("displayedData", JSON.stringify(displayedData)); // เก็บข้อมูลใน sessionStorage
   } else {
     console.log("Item not found for update.");
   }
