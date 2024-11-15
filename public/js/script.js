@@ -55,8 +55,9 @@ function renderTable(data) {
         <td class="px-4 py-2 text-center">${item.account}</td>
         <td class="px-4 py-2 text-center">${item.firstCode}</td>
         <td class="px-4 py-2 text-center">${item.secondCode}</td>
+        <td class="px-4 py-2 text-center">ยังไม่ได้เติม</td>
         <td class="px-4 py-2 text-center">
-        <button>เติมแล้ว</button>
+        <button>เรียบร้อย</button>
         </td>
       </tr>
     `;

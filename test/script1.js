@@ -223,7 +223,7 @@ function RenderHtml(result) {
 }
 
 async function ApiPostForm(data) {
-  const response = await fetch("http://localhost:8000/free-credit", {
+  const response = await fetch("https://api.goat69.net/free-credit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -240,7 +240,7 @@ async function ApiPostForm(data) {
 }
 
 async function ApiGetCodes() {
-  const response = await fetch("http://localhost:8000/codes", {
+  const response = await fetch("https://api.goat69.net/codes", {
     method: "GET",
   });
   const Result = await response.json();
