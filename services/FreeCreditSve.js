@@ -26,13 +26,11 @@ const FreeCredit = async (data) => {
 
     console.log(`RutCode found: ${Code_1} ${Code_2}`);
 
-    Result = await fc
-      .create({
-        account: account,
-        firstCode: [Code_1._id],
-        secondCode: [Code_2._id],
-      })
- 
+    Result = await fc.create({
+      account: account,
+      firstCode: [Code_1._id],
+      secondCode: [Code_2._id],
+    });
 
     console.log(`FreeCredit updated: ${Result}`);
 
@@ -47,7 +45,7 @@ const FreeCredit = async (data) => {
         { isActive: true },
         { new: true }
       ),
-    ]); 
+    ]);
 
     console.log(`Update IsActive: ${RutCode}`);
 
@@ -56,16 +54,15 @@ const FreeCredit = async (data) => {
       .populate("firstCode")
       .populate("secondCode");
 
- 
-      _io.emit("UpdateData", {
-        _id: Result._id,
-        account: Result.account,
-        firstCode: Result.firstCode[0].code,
-        secondCode: Result.secondCode[0].code,
-        status: Result.status,
-        createdAt: Result.createdAt,
-        updatedAt: Result.updatedAt,
-      });
+    _io.emit("UpdateData", {
+      _id: Result._id,
+      account: Result.account,
+      firstCode: Result.firstCode[0].code,
+      secondCode: Result.secondCode[0].code,
+      status: Result.status,
+      createdAt: Result.createdAt,
+      updatedAt: Result.updatedAt,
+    });
 
     if (!Result) return { status: "error", message: "FreeCredit not found" };
 
@@ -76,6 +73,29 @@ const FreeCredit = async (data) => {
   }
 
   return { status: "success", result: Result };
+};
+
+const UpdateStatus = async (data) => {
+  const { id, status } = data;
+
+  const Result = await fc.findOneAndUpdate(
+    { _id: id },
+    { status: status },
+    { upsert: true, new: true }
+  );
+
+
+  _io.emit("UpdateStatus", {
+    _id: Result._id,
+    account: Result.account,
+    firstCode: Result.firstCode[0].code,
+    secondCode: Result.secondCode[0].code,
+    status: Result.status,
+    createdAt: Result.createdAt,
+    updatedAt: Result.updatedAt,
+  });
+
+  return Result;
 };
 
 const SendRandomClient = async () => {
@@ -111,4 +131,4 @@ const RandomCode = () => {
 //   await SaveRandomCode();
 // }, 2000);
 
-module.exports = { FreeCredit, SendRandomClient };
+module.exports = { FreeCredit, UpdateStatus, SendRandomClient };

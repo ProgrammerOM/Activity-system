@@ -19,7 +19,6 @@ function enableNotifications() {
   }
 }
 
-
 // ฟังก์ชันที่ใช้ในการแสดงข้อมูลในตาราง
 function renderTable(data) {
   const tableBody = document.getElementById("tableBody");
@@ -66,6 +65,9 @@ function renderTable(data) {
 
       const fillTime = getFillTime(date);
 
+      const buttonClass =
+        item.status === "เติมแล้ว" ? "bg-green-500" : "bg-red-500";
+
       return `
       <tr>
         <td class="px-4 py-2 font-light text-center">${formattedDate}</td>
@@ -76,7 +78,7 @@ function renderTable(data) {
         <td class="px-4 py-2 font-light text-center">${fillTime}</td>
         <td class="px-4 py-2 font-light text-center">${item.status}</td>
         <td class="px-4 py-2 font-light text-center">
-        <button class="bg-red-500 text-white p-2 rounded-lg">เรียบร้อย</button>
+        <button class="text-white p-2 rounded-lg ${buttonClass}" data-id-action="${item._id}">เรียบร้อย</button>
         </td>
       </tr>
     `;
@@ -149,6 +151,20 @@ socket.on("UpdateData", (newData) => {
   enableNotifications();
 });
 
+socket.on("UpdateStatus", (newData) => {
+  console.log("Received new status:", newData);
+  const updatedItemIndex = displayedData.findIndex(
+    (item) => item._id === newData._id
+  );
+  console.log(updatedItemIndex);
+  if (updatedItemIndex !== -1) {
+    displayedData[updatedItemIndex].status = newData.status;
+    renderTable(displayedData);
+  } else {
+    console.log("Item not found for update.");
+  }
+});
+
 // ปุ่ม Previous และ Next
 document.getElementById("prevPageBtn").addEventListener("click", () => {
   if (currentPage > 1) {
@@ -177,5 +193,33 @@ function getFillTime(date) {
     return "เติมก่อน 20:00";
   } else if (hour >= 18 && hour < 24) {
     return "เติมก่อน 02:00";
+  }
+}
+
+document.getElementById("tableBody").addEventListener("click", (e) => {
+  if (e.target && e.target.matches("button[data-id-action]")) {
+    const idAction = e.target.getAttribute("data-id-action");
+    console.log("ปุ่มที่ถูกคลิก:", idAction); // id ของปุ่มที่ถูกคลิก
+
+    ApiUpdate(idAction);
+  }
+});
+
+async function ApiUpdate(id) {
+  try {
+    const response = await axios.post(
+      `${window.location.origin}/update-status`,
+      {
+        id: id,
+        status: "เติมแล้ว",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
   }
 }
