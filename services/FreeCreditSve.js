@@ -29,7 +29,6 @@ const FreeCredit = async (data) => {
     Result = await fc
       .create({
         account: account,
-        code: [Code_1._id],
         firstCode: [Code_1._id],
         secondCode: [Code_2._id],
       })
@@ -54,7 +53,6 @@ const FreeCredit = async (data) => {
 
     Result = await fc
       .findOne({ _id: Result._id })
-      .populate("code")
       .populate("firstCode")
       .populate("secondCode");
 

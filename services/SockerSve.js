@@ -12,7 +12,6 @@ async function SendData() {
   try {
     const Result = await fs
       .find({})
-      .populate("code")
       .populate("firstCode")
       .populate("secondCode");
 
