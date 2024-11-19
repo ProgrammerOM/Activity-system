@@ -70,8 +70,8 @@ function renderTable(data) {
 
       const fillTime = getFillTime(date);
 
-      const buttonClass =
-        item.status === "เติมแล้ว" ? "bg-green-500" : "bg-red-500";
+      const buttonClass = item.status === "เติมแล้ว" ? "bg-green-500" : "bg-red-500";
+      const TextClass = item.status === "เติมแล้ว" ? "เรียบร้อย" : "ยังไม่เรียบร้อย";
 
       return `
       <tr>
@@ -83,7 +83,7 @@ function renderTable(data) {
         <td class="px-4 py-2 font-light text-center">${fillTime}</td>
         <td class="px-4 py-2 font-light text-center">${item.status}</td>
         <td class="px-4 py-2 font-light text-center">
-        <button class="text-white p-2 rounded-lg ${buttonClass}" data-id-action="${item._id}">เรียบร้อย</button>
+        <button class="text-white p-2 rounded-lg ${buttonClass}" data-id-action="${item._id}">${TextClass}</button>
         </td>
       </tr>
     `;
@@ -219,9 +219,8 @@ function getFillTime(date) {
 document.getElementById("tableBody").addEventListener("click", (e) => {
   if (e.target && e.target.matches("button[data-id-action]")) {
     const idAction = e.target.getAttribute("data-id-action");
-    console.log("ปุ่มที่ถูกคลิก:", idAction); // id ของปุ่มที่ถูกคลิก
 
-    ApiUpdate(idAction);
+    Modal(idAction);
   }
 });
 
@@ -242,4 +241,20 @@ async function ApiUpdate(id) {
   } catch (error) {
     console.log(error);
   }
+}
+
+function Modal(id) {
+  const modal = document.querySelector(".modal--tip");
+  const cancel = document.querySelector("#cancel");
+  const confirm = document.querySelector("#confirm");
+
+  modal.showModal();
+
+  cancel.addEventListener("click", () => {
+    modal.close();
+  });
+  confirm.addEventListener("click", async () => {
+    await ApiUpdate(id);
+    modal.close();
+  });
 }

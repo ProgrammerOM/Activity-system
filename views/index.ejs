@@ -22,7 +22,7 @@
           <th class="px-4 py-2 font-normal">Second Code</th>
           <th class="px-4 py-2 font-normal">Fill Time</th>
           <th class="px-4 py-2 font-normal">Status</th>
-          <th class="px-4 py-2 font-norma">Action</th>
+          <th class="px-4 py-2 font-normal">Action</th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -60,4 +60,22 @@
       preload="auto"
     ></audio>
   </div>
+
+  <dialog class="modal modal--tip" id="modal--tip">
+    <div class="modal__content">
+      <div class="modal__announce">
+        <div class="m-3">
+          <h2 class="text-lg text-center">คุณแน่ใจหรือไหม</h2>
+        </div>
+        <div class="flex justify-evenly">
+          <div>
+            <button class="w-24 text-white font-light bg-red-500 p-1 rounded-lg active:bg-red-400" id="cancel">ยกเลิก</button>
+          </div>
+          <div>
+            <button class="w-24 text-white font-light bg-green-500 p-1 rounded-lg active:bg-green-400" id="confirm">ยืนยัน</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 </div>
