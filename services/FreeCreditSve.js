@@ -67,12 +67,11 @@ const FreeCredit = async (data) => {
     if (!Result) return { status: "error", message: "FreeCredit not found" };
 
     console.log(`Populated FreeCredit: ${Result}`);
+    return { status: "success", message: "ยินดีด้วยคุณทำกิจรรมสำเสร็จแล้ว" };
   } catch (error) {
     console.log(error);
     return { status: "error", message: error.message };
   }
-
-  return { status: "success", result: Result };
 };
 
 const UpdateStatus = async (data) => {
@@ -83,7 +82,6 @@ const UpdateStatus = async (data) => {
     { status: status },
     { upsert: true, new: true }
   );
-
 
   _io.emit("UpdateStatus", {
     _id: Result._id,
