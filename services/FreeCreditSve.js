@@ -19,7 +19,7 @@ const FreeCredit = async (data) => {
     console.log(Code_1, Code_2);
 
     if (!Code_1 || !Code_2) {
-      return { status: "error", message: "Code not found" };
+      return { status: "error", message: "กรุณาตรวจสอบความถูกต้องของ Code" };
     } else if (Code_1.isActive === true || Code_2.isActive === true) {
       return { status: "error", message: "Code ไม่สามารถใช้งานได้" };
     }
