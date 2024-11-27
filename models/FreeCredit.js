@@ -15,11 +15,14 @@ const FreeCredit = new Schema(
         ref: "RandomCode",
       },
     ],
-    status:{
+    status: {
       type: String,
-      enum: ['ยังไม่ได้เติม', "เติมแล้ว"],
+      enum: ["ยังไม่ได้เติม", "เติมแล้ว"],
       default: "ยังไม่ได้เติม",
-    }
+    },
+    starttime: {
+      type: String,
+    },
   },
   {
     timestamps: true,
