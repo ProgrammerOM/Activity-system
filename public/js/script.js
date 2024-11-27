@@ -144,7 +144,7 @@ document.getElementById("searchInput").addEventListener("input", (event) => {
 
 // เพิ่มข้อมูลใหม่จากเซิร์ฟเวอร์
 socket.on("Data", (data) => {
-  console.log("Received Data:", data);
+  // console.log("Received Data:", data);
 
   if (!displayedData.some((item) => item._id === data._id)) {
     // ถ้าไม่มีก็เพิ่มข้อมูล
@@ -163,7 +163,7 @@ window.addEventListener("load", () => {
 
 // การอัปเดตข้อมูลใหม่
 socket.on("UpdateData", (newData) => {
-  console.log("Received new update:", newData);
+  // console.log("Received new update:", newData);
   displayedData.push(newData);
   renderTable(displayedData); // Re-render after update data is received
   sessionStorage.setItem("displayedData", JSON.stringify(displayedData)); // เก็บข้อมูลใน sessionStorage
@@ -171,7 +171,7 @@ socket.on("UpdateData", (newData) => {
 });
 
 socket.on("UpdateStatus", (newData) => {
-  console.log("Received new status:", newData);
+  // console.log("Received new status:", newData);
   const updatedItemIndex = displayedData.findIndex(
     (item) => item._id === newData._id
   );
