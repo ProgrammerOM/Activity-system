@@ -2,16 +2,43 @@ const fc = require("../models/FreeCredit");
 const rd = require("../models/Codes");
 
 const FreeCredit = async (data) => {
-  const { account, codes } = data;
+  const { account, codes, starttime } = data;
 
-  console.log(codes);
+  console.log(starttime);
 
-  if (!account || !codes) return false;
+  if (!account || !codes || !starttime) return false;
 
   let Result;
   let RutCode;
 
   try {
+    const Checkat = await fc.findOne({ account: account }).sort({ _id: -1 });
+
+    if(Checkat?.starttime){
+      let time = new Date(Checkat.starttime)
+      let now = new Date()
+
+      const timeDifference = now - time
+
+      const hoursDiffernce = timeDifference / (1000 * 60 * 60)
+      if(hoursDiffernce < 24){
+        const remainingTimeMs = 24 * 60 * 60 * 1000 - timeDifference
+        const complete24HoursAt =  new Date(now.getTime() + remainingTimeMs)
+        console.log(`เวลาเริ่มต้น: ${time}`);
+        console.log(`เวลาที่ครบ 24 ชั่วโมง: ${complete24HoursAt}`);
+        console.log(
+          `ครบ 24 ชั่วโมงในอีก: ${(remainingTimeMs / (1000 * 60 * 60)).toFixed(
+            2
+          )} ชั่วโมง`
+        );
+        return {
+          status: "error",
+          message: "วันนี้คุณได้ทำกิจกรรมไปแล้ว",
+          complete24HoursAt: complete24HoursAt, // ส่งคืนเวลาเมื่อครบ 24 ชั่วโมง
+        };
+      }
+    }
+
     const [Code_1, Code_2] = await Promise.all(
       codes.map((code) => rd.findOne({ code }).exec())
     );
@@ -30,6 +57,7 @@ const FreeCredit = async (data) => {
       account: account,
       firstCode: [Code_1._id],
       secondCode: [Code_2._id],
+      starttime: starttime,
     });
 
     console.log(`FreeCredit updated: ${Result}`);
@@ -123,6 +151,17 @@ const RandomCode = () => {
     codes += digits[Math.floor(Math.random() * len)];
   }
   return codes;
+};
+
+const Times = (date = new Date()) => {
+  // console.log(date)
+  let today = new Date(date);
+  let day = String(today.getDate()).padStart(2, "0");
+  let month = String(today.getMonth() + 1).padStart(2, "0");
+  let year = today.getFullYear();
+
+  let todays = month + "/" + day + "/" + year;
+  return todays;
 };
 
 // setInterval(async () => {

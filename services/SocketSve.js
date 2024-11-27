@@ -15,6 +15,10 @@ async function SendData() {
       .populate("firstCode")
       .populate("secondCode");
 
+    if (!Result) return;
+
+    
+
     for (let i = 0; i < Result.length; i++) {
       const item = Result[i];
 
@@ -24,6 +28,7 @@ async function SendData() {
         firstCode: item.firstCode[0].code,
         secondCode: item.secondCode[0].code,
         status: item.status,
+        startTime: item.starttime,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
       });
