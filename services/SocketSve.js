@@ -22,16 +22,18 @@ async function SendData() {
     for (let i = 0; i < Result.length; i++) {
       const item = Result[i];
 
-      _io.emit("Data", {
-        _id: item._id,
-        account: item.account,
-        firstCode: item.firstCode[0].code,
-        secondCode: item.secondCode[0].code,
-        status: item.status,
-        startTime: item.starttime,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-      });
+      if (item.firstCode?.[0]?.code && item.secondCode?.[0]?.code) {
+        _io.emit("Data", {
+          _id: item._id,
+          account: item.account,
+          firstCode: item.firstCode[0].code,
+          secondCode: item.secondCode[0].code,
+          status: item.status,
+          startTime: item.starttime,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        });
+      }
     }
   } catch (error) {
     console.log(error);
