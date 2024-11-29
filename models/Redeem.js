@@ -14,4 +14,4 @@ const RedeemCode = new Schema(
     versionKey: false,
   }
 );
-module.exports = mongoose.model("RedeemCode", RedeemCode);
+// module.exports = mongoose.model("RedeemCode", RedeemCode);
