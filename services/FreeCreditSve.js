@@ -4,7 +4,7 @@ const rd = require("../models/Codes");
 const FreeCredit = async (data) => {
   const { account, codes, starttime } = data;
 
-  if (!account || !codes ) return false;
+  if (!account || !codes || !starttime) return false;
 
   let Result;
   let RutCode;
