@@ -11,7 +11,7 @@ const UpdateStatus = async (req, res) => {
 };
 
 const SendClient = async (req, res) => {
-  const Result = await fcs.SendRandomClient();
+  const Result = await fcs.SendRandomClient(req.query);
   res.json(Result);
 };
 

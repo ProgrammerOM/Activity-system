@@ -4,9 +4,7 @@ const rd = require("../models/Codes");
 const FreeCredit = async (data) => {
   const { account, codes, starttime } = data;
 
-  console.log(starttime);
-
-  if (!account || !codes || !starttime) return false;
+  if (!account || !codes ) return false;
 
   let Result;
   let RutCode;
@@ -14,16 +12,16 @@ const FreeCredit = async (data) => {
   try {
     const Checkat = await fc.findOne({ account: account }).sort({ _id: -1 });
 
-    if(Checkat?.starttime){
-      let time = new Date(Checkat.starttime)
-      let now = new Date()
+    if (Checkat?.starttime) {
+      let time = new Date(Checkat.starttime);
+      let now = new Date();
 
-      const timeDifference = now - time
+      const timeDifference = now - time;
 
-      const hoursDiffernce = timeDifference / (1000 * 60 * 60)
-      if(hoursDiffernce < 24){
-        const remainingTimeMs = 24 * 60 * 60 * 1000 - timeDifference
-        const complete24HoursAt =  new Date(now.getTime() + remainingTimeMs)
+      const hoursDiffernce = timeDifference / (1000 * 60 * 60);
+      if (hoursDiffernce < 24) {
+        const remainingTimeMs = 24 * 60 * 60 * 1000 - timeDifference;
+        const complete24HoursAt = new Date(now.getTime() + remainingTimeMs);
         console.log(`เวลาเริ่มต้น: ${time}`);
         console.log(`เวลาที่ครบ 24 ชั่วโมง: ${complete24HoursAt}`);
         console.log(
@@ -85,8 +83,8 @@ const FreeCredit = async (data) => {
     _io.emit("UpdateData", {
       _id: Result._id,
       account: Result.account,
-      firstCode: Result.firstCode[0].code,
-      secondCode: Result.secondCode[0].code,
+      firstCode: Result.firstCode,
+      secondCode: Result.secondCode,
       status: Result.status,
       createdAt: Result.createdAt,
       updatedAt: Result.updatedAt,
@@ -124,8 +122,25 @@ const UpdateStatus = async (data) => {
   return Result;
 };
 
-const SendRandomClient = async () => {
-  const Result = await rd.find({ isActive: false });
+const SendRandomClient = async (data) => {
+  const { page, limit } = data;
+  const skip = (page - 1) * limit;
+  let Result;
+
+  Result = await rd
+    .find({ isActive: false })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const totalDocuments = await rd.countDocuments();
+
+  Result = {
+    data: Result,
+    currentPage: page,
+    totalPages: Math.ceil(totalDocuments / limit),
+    totalDocuments,
+  };
   return Result;
 };
 
@@ -154,7 +169,6 @@ const RandomCode = () => {
 };
 
 const Times = (date = new Date()) => {
-  // console.log(date)
   let today = new Date(date);
   let day = String(today.getDate()).padStart(2, "0");
   let month = String(today.getMonth() + 1).padStart(2, "0");
