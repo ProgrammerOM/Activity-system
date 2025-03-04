@@ -23,71 +23,15 @@ const connection = async (socket) => {
         totalPages: Math.ceil(totalDocuments / limit),
         totalDocuments,
       };
-      console.log(show);
+
 
       if (!Result) return;
 
       socket.emit("Data", show);
-      // for (let i = 0; i < Result.length; i++) {
-      //   const item = Result[i];
-
-      //   if (item.firstCode?.[0]?.code && item.secondCode?.[0]?.code) {
-      //     socket.emit("Data", {
-      //       _id: item._id,
-      //       account: item.account,
-      //       firstCode: item.firstCode[0].code,
-      //       secondCode: item.secondCode[0].code,
-      //       status: item.status,
-      //       startTime: item.starttime,
-      //       currentPage: page,
-      //       totalPages: Math.ceil(totalDocuments / limit),
-      //       totalDocuments,
-      //       createdAt: item.createdAt,
-      //       updatedAt: item.updatedAt,
-      //     });
-      //   }
-      // }
     } catch (error) {
       console.log(error);
     }
   }); 
-  //   try {
-  //     let results;
-  //     // const skip = (page -1) * limit
-  //     const regex = new RegExp(query, "i");
-
-  //     if (!query) {
-  //       // ถ้า query ว่าง ให้ดึงข้อมูลทั้งหมด
-  //       results = await fs.find({}).populate("firstCode").populate("secondCode")
-
-  //     } else {
-  //       const searchConditions = [];
-
-  //       // ตรวจสอบว่า query เป็น ObjectId หรือไม่
-  //       if (mongoose.Types.ObjectId.isValid(query)) {
-  //         searchConditions.push({ _id: query });
-  //       }
-
-  //       searchConditions.push(
-  //         { account: regex },
-  //         { "firstCode.code": regex },
-  //         { "secondCode.code": regex },
-  //         { status: regex }
-  //       );
-
-  //       // ค้นหาโดยใช้ $or
-  //       results = await fs
-  //         .find({ $or: searchConditions })
-  //         .populate("firstCode")
-  //         .populate("secondCode");
-  //     }
-
-  //     console.log(results);
-  //     callback({ success: true, data: results });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
 
   socket.on("searchQuery", async (query, page, limit, callback) => {
     try {
@@ -156,7 +100,6 @@ async function SendData(page = 1, limit = 5) {
       totalPages: Math.ceil(totalDocuments / limit),
       totalDocuments,
     };
-    console.log(show);
 
     if (!Result) return;
 
