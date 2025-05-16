@@ -2,6 +2,14 @@ const axios = require("axios");
 
 const jackpot = async (data) => {
   const { title, content } = data;
+
+  if(!title || !content) {
+    return {
+      success: false,
+      status: 400,
+    };
+  } 
+
   const arrStr = [
     `ยินดีด้วยกับยูส ${title} Jackpot ที่ได้รับ ${content}`,
     `ติดต่อขอรับสิทธิ์ได้ที่ แอดมินใบเตยยูส ${title} ยอด ${content} JACKPOT`,
@@ -55,6 +63,10 @@ const jackpot = async (data) => {
     };
   } catch (error) {
     console.log(error);
+     return {
+      success: false,
+      status: 500,
+    };
   }
 };
 

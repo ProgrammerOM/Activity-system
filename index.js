@@ -9,11 +9,14 @@ const http = require("http");
 const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
+
+const allowedOrigins = [process.env.WP_WEB, process.env.URL_WEB, process.env.URL_API];
+
 const io = socketIo(server, {
   path: "/socket.io",
   transports: ["websocket"],
   cors: {
-    origin: [process.env.WP_WEB, process.env.URL_WEB, process.env.URL_API],
+    origin: allowedOrigins,
     methods: "*",
   },
 });
@@ -35,10 +38,6 @@ app.set("view engine", "ejs");
 app.use(
   Cors({
     origin: (origin, callback) => {
-      const allowedOrigins = [
-        `${process.env.URL_WEB}`,
-        `${process.env.URL_API}`,
-      ];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
