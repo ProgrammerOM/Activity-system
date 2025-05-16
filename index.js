@@ -13,7 +13,7 @@ const io = socketIo(server, {
   path: "/socket.io",
   transports: ["websocket"],
   cors: {
-    origin: [`${process.env.URL_WEB}`, `${process.env.URL_API}`],
+    origin: [process.env.WP_WEB, process.env.URL_WEB, process.env.URL_API],
     methods: "*",
   },
 });
