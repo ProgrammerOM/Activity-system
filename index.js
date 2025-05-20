@@ -10,14 +10,15 @@ const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = [process.env.WP_WEB, process.env.URL_WEB, process.env.URL_API];
+const allowedOrigins = [process.env.WP_WEB, process.env.URL_API];
+console.log(allowedOrigins);
 
 const io = socketIo(server, {
   path: "/socket.io",
   transports: ["websocket"],
   cors: {
     origin: allowedOrigins,
-    methods: "*",
+    methods: ["GET", "POST"],
   },
 });
 
@@ -44,7 +45,8 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 

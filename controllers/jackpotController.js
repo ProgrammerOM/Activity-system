@@ -12,4 +12,16 @@ const jackpot = async (req, res) => {
   }
 };
 
-module.exports = { jackpot };
+const Getjackpot = async (req, res) => {
+  try {
+    const Result = await jackpotSev.Getjackpot();
+    if (!Result.success) {
+      return res.status(Result.status).json(Result);
+    }
+    res.status(Result.status).json(Result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { jackpot, Getjackpot };

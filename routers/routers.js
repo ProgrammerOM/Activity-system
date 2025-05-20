@@ -10,5 +10,6 @@ router.post("/free-credit", Free.FreeCredit);
 router.post("/update-status", Free.UpdateStatus);
 router.get("/codes", Free.SendClient);
 router.post("/api/reviews/jackpot", jack.jackpot);
+router.get("/api/jackpot", jack.Getjackpot);
 
 module.exports = router;
