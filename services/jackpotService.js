@@ -14,7 +14,7 @@ const jackpot = async (data) => {
 
     const count = await jackpotDB.countDocuments().lean();
 
-    if (count < 3) {
+    if (count < 5) {
       const Create = await jackpotDB.create({
         acccount: title,
         amount: content,
@@ -111,7 +111,7 @@ const Getjackpot = async () => {
     const jackpot = await jackpotDB
       .find()
       .sort({ createdAt: -1 })
-      .limit(3)
+      .limit(5)
       .lean();
 
     if (!jackpot) {
