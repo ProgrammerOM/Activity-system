@@ -11,7 +11,6 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [process.env.WP_WEB, process.env.URL_API];
-console.log(allowedOrigins);
 
 const io = socketIo(server, {
   path: "/socket.io",

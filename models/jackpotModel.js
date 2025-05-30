@@ -10,6 +10,10 @@ const jackpotSchema = new Schema(
       type: Number,
       required: true,
     },
+    img: {
+      type: String,
+      default: "https://example.com/default-image.jpg", // URL ของรูปภาพเริ่มต้น
+    },
   },
   {
     timestamps: true,
